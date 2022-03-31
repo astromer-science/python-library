@@ -10,14 +10,14 @@ setup(
     name='astromer',
     version='0.0.1',
     license='MIT',
-    url='https://github.com/astromer-science/python-library'
+    url='https://github.com/astromer-science/python-library',
     description='ASTROMER embedding model',
     author="Cristobal Donoso-Oliva",
     author_email='cridonoso@inf.udec.cl',
     py_modules=['astromer/*'],
     package_dir={'':'src'},
     long_description=long_description,
-    long_description_content_type="/text/markdown",
+    long_description_content_type="text/markdown",
     install_requires=required,
     extras_require = {
         "dev": [

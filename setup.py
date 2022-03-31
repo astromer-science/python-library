@@ -10,6 +10,7 @@ setup(
     name='astromer',
     version='0.0.1',
     license='MIT',
+    url='https://github.com/astromer-science/python-library'
     description='ASTROMER embedding model',
     author="Cristobal Donoso-Oliva",
     author_email='cridonoso@inf.udec.cl',

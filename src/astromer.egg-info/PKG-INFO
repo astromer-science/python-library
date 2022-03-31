@@ -1,0 +1,16 @@
+Metadata-Version: 2.1
+Name: astromer
+Version: 0.0.1
+Summary: ASTROMER embedding model
+Home-page: UNKNOWN
+Author: Cristobal Donoso-Oliva
+Author-email: cridonoso@inf.udec.cl
+License: MIT
+Platform: UNKNOWN
+Description-Content-Type: /text/markdown
+Provides-Extra: dev
+License-File: LICENSE.txt
+
+# ASTROMER Python library
+
+

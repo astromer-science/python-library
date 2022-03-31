@@ -1,0 +1,10 @@
+tensorflow>=2.6
+numpy
+pandas
+tqdm
+seaborn
+scipy
+
+[dev]
+pytest>=7.0.0
+alerce

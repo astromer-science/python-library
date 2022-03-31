@@ -1,1 +1,1 @@
-# python-library
+# ASTROMER Python library

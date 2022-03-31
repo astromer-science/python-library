@@ -1,8 +1,0 @@
-LICENSE.txt
-README.md
-setup.py
-src/astromer.egg-info/PKG-INFO
-src/astromer.egg-info/SOURCES.txt
-src/astromer.egg-info/dependency_links.txt
-src/astromer.egg-info/requires.txt
-src/astromer.egg-info/top_level.txt

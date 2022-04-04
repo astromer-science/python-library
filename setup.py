@@ -7,14 +7,14 @@ with open('requirements.txt') as f:
     required = f.read().splitlines()
 
 setup(
-    name='astromer-encoder',
+    name='ASTROMER',
     version='1.0.0',
     license='MIT',
     url='https://github.com/astromer-science/python-library',
     description='ASTROMER embedding model',
     author="Cristobal Donoso-Oliva",
     author_email='cridonoso@inf.udec.cl',
-    py_modules=['astromer_science/*'],
+    py_modules=['astromer/*'],
     package_dir={'':'src'},
     long_description=long_description,
     long_description_content_type="text/markdown",

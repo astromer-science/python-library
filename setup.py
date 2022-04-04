@@ -7,7 +7,7 @@ with open('requirements.txt') as f:
     required = f.read().splitlines()
 
 setup(
-    name='astromer',
+    name='astromer-encoder',
     version='1.0.0',
     license='MIT',
     url='https://github.com/astromer-science/python-library',

@@ -1,6 +1,7 @@
 import warnings
 
-from astromer.model import ASTROMER
+from astromer import ASTROMER
+
 from alerce.core import Alerce
 
 

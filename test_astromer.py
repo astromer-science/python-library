@@ -1,13 +1,13 @@
 import warnings
 
-from astromer import ASTROMER
+import ASTROMER
 
 from alerce.core import Alerce
 
 
 def test_model_instance():
     alerce = Alerce()
-    model = ASTROMER()
+    # model = ASTROMER()
     model.from_pretrained('macho')
 
     samples_collection = []

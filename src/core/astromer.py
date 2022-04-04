@@ -73,12 +73,13 @@ class BaseASTROMER(Model):
             print('[INFO] Loading numpy arrays')
             dataset = load_numpy(dataset, ids=oids_list, labels=labels)
             dataset = inference_pipeline(dataset, batch_size=batch_size,
-                                         max_obs=self.maxlen, drop_remainder=True)
+                                         max_obs=self.maxlen, drop_remainder=True,
+                                         get_ids=True)
 
         att = self.predict(dataset)
 
         if concatenate:
-            oids = tf.concat([oid for _, (_, _, oid) in dataset], axis=0)
+            oids = tf.concat([oid for _, (_, oid) in dataset], axis=0)
             oids = np.array([str(o.numpy().decode('utf8') )for o in oids])
             unique_id = np.unique(oids)
 
@@ -161,6 +162,6 @@ class ASTROMER(BaseASTROMER):
 
     def from_pretrained(self, name):
         url = 'https://github.com/astromer-science/weights/raw/main/{}.zip'.format(name)
-        target = 'core/weights'
+        target = './weights'
         self.download_weights(url, os.path.join(target, name))
         self.load_weights(os.path.join(target, name))

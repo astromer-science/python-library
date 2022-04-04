@@ -8,7 +8,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='ASTROMER',
-    version='1.0.0',
+    version='1.0.1',
     license='MIT',
     url='https://github.com/astromer-science/python-library',
     description='ASTROMER embedding model',
@@ -31,3 +31,5 @@ setup(
 # python setup.py sdist
 # python setup.py bdist_wheel sdist
 # twine upload dist/*
+# for upload
+# python -m twine upload --repository-url https://pypi.org/manage/project/ASTROMER/release/1.0.0/ dist/*

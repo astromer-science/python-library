@@ -9,6 +9,9 @@ from tensorflow.python.lib.io import tf_record
 from tensorflow.core.util import event_pb2
 from datetime import datetime
 
+import requests
+import zipfile
+
 def draw_graph(model, dataset, writer, logdir=''):
     '''Decorator that reports store fn graph.'''
 
@@ -145,3 +148,19 @@ def dict_to_json(dictonary, project_path):
     varsdic['exp_date'] = now.strftime("%d/%m/%Y %H:%M:%S")
     with open(conf_file, 'w') as json_file:
         json.dump(varsdic, json_file, indent=4)
+
+def download_weights(url, target):
+
+    if not os.path.isdir(target):
+        os.makedirs(target, exist_ok=True)
+
+    r = requests.get(url)
+
+    path_zip = '{}.zip'.format(target)
+    with open(path_zip, 'wb') as f:
+        f.write(r.content)
+
+    with zipfile.ZipFile(path_zip, 'r') as zip_ref:
+        zip_ref.extractall('/'.join(path_zip.split('/')[:-1]))
+
+    os.remove(path_zip)

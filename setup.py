@@ -14,7 +14,7 @@ setup(
     description='ASTROMER embedding model',
     author="Cristobal Donoso-Oliva",
     author_email='cridonoso@inf.udec.cl',
-    py_modules=['astromer/*'],
+    py_modules=['astromer_science/*'],
     package_dir={'':'src'},
     long_description=long_description,
     long_description_content_type="text/markdown",

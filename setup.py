@@ -10,8 +10,8 @@ with open('requirements.txt') as f:
 
 # Setting up
 setup(
-    name="ASTROMER",
-    version='1.0.15',
+    name="deepweights",
+    version='0.0.1',
     url='https://github.com/astromer-science/python-library',
     author="Cristobal Donoso",
     author_email="<cridonoso@inf.udec.cl>",

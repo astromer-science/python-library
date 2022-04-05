@@ -1,4 +1,6 @@
 from setuptools import setup, find_packages
+import codecs
+import os
 
 with open("README.md", "r") as file:
     long_description = file.read()
@@ -6,27 +8,28 @@ with open("README.md", "r") as file:
 with open('requirements.txt') as f:
     required = f.read().splitlines()
 
+# Setting up
 setup(
-    name='ASTROMER',
+    name="ASTROMER",
     version='1.0.5',
-    license='MIT',
     url='https://github.com/astromer-science/python-library',
+    author="Cristobal Donoso",
+    author_email="<cridonoso@inf.udec.cl>",
     description='ASTROMER embedding model',
-    author="Cristobal Donoso-Oliva",
-    author_email='cridonoso@inf.udec.cl',
-    package_dir={'': 'src'},
-    packages = find_packages('core'),
-    long_description=long_description,
     long_description_content_type="text/markdown",
+    long_description=long_description,
+    packages=find_packages(),
     install_requires=required,
-    extras_require = {
-        "dev": [
-            "pytest>=7.0.0",
-            "alerce"
-        ],
-    },
+    keywords=['python', 'light curves', 'photometry', 'transformers', 'deep learning'],
+    classifiers=[
+        "Development Status :: 1 - Planning",
+        "Intended Audience :: Developers, Astronomers, Data Scientists",
+        "Programming Language :: Python :: 3",
+        "Operating System :: Unix",
+        "Operating System :: MacOS :: MacOS X",
+        "Operating System :: Microsoft :: Windows",
+    ]
 )
-
 # python setup.py sdist
 # python setup.py bdist_wheel sdist
 # twine upload dist/*

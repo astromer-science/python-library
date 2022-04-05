@@ -1,8 +1,11 @@
 # ASTROMER Python library 🔭
-### Release: v0.0.1 (the origin)
+### Release: v0.0.1 (the origin 👁️)
+
 ASTROMER is a transformer based model pretrained on millions of light curves. ASTROMER can be finetuned on specific datasets to create useful representations that can improve the performance of novel deep learning models.
 
-This version of ASTROMER can only works on single band light curves. 
+❗ This version of ASTROMER can only works on single band light curves. 
+
+🔥 [See the official repo here](https://github.com/astromer-science/main-code) 
 
 ## Install
 ```

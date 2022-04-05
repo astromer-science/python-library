@@ -11,7 +11,7 @@ with open('requirements.txt') as f:
 # Setting up
 setup(
     name="ASTROMER",
-    version='1.0.5',
+    version='1.0.15',
     url='https://github.com/astromer-science/python-library',
     author="Cristobal Donoso",
     author_email="<cridonoso@inf.udec.cl>",
@@ -22,8 +22,6 @@ setup(
     install_requires=required,
     keywords=['python', 'light curves', 'photometry', 'transformers', 'deep learning'],
     classifiers=[
-        "Development Status :: 1 - Planning",
-        "Intended Audience :: Developers, Astronomers, Data Scientists",
         "Programming Language :: Python :: 3",
         "Operating System :: Unix",
         "Operating System :: MacOS :: MacOS X",

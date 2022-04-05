@@ -8,17 +8,15 @@ import numpy as np
 from tensorflow.keras.layers  import Input, Dense
 from tensorflow.keras         import Model
 
-from core.data                import load_numpy, inference_pipeline
-from core.components.decoder  import RegLayer, NSP_Regressor
-from core.training.losses     import custom_rmse
-from core.training.metrics    import custom_r2
-from core.components.encoder  import Encoder
+from .data                import load_numpy, inference_pipeline
+from .components.decoder  import RegLayer, NSP_Regressor
+from .utils               import download_weights
+from .training.losses     import custom_rmse
+from .training.metrics    import custom_r2
+from .components.encoder  import Encoder
 
 from tensorflow.keras.losses  import BinaryCrossentropy
-from core.utils               import download_weights
 from tensorflow.keras.metrics import BinaryAccuracy
-from core.training.losses     import custom_rmse
-from core.training.metrics    import custom_r2
 
 
 logging.getLogger('tensorflow').setLevel(logging.ERROR)  # suppress warnings

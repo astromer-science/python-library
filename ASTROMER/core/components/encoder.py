@@ -1,7 +1,7 @@
 import tensorflow as tf
 
-from core.components.attention import MultiHeadAttention
-from core.components.positional import positional_encoding
+from .attention import MultiHeadAttention
+from .positional import positional_encoding
 
 def point_wise_feed_forward_network(d_model, dff):
     return tf.keras.Sequential([

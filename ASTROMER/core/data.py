@@ -4,9 +4,10 @@ import numpy as np
 import logging
 import os
 
-from core.preprocess.masking import get_masked, set_random, pad_sequence
-from core.preprocess.records import write_records, deserialize
-from core.utils import standardize
+from .preprocess.masking import get_masked, set_random, pad_sequence
+from .preprocess.records import write_records, deserialize
+from .utils import standardize
+
 from tqdm import tqdm
 from time import time
 

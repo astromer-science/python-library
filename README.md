@@ -25,20 +25,22 @@ It will automatically download the weights from [this public github repository](
 
 Assuming you have a list of vary-lenght (numpy) light curves.
 ```
-samples_collection = [ [[5200, 0.3, 0.2],
-                        [5300, 0.5, 0.1],
-                        [5400, 0.2, 0.3]], 
+import numpy as np
+
+samples_collection = [ np.array([[5200, 0.3, 0.2],
+                                 [5300, 0.5, 0.1],
+                                 [5400, 0.2, 0.3]]), 
                       
-                       [[4200, 0.3, 0.1],
-                        [4300, 0.6, 0.3]] ]
+                       np.array([[4200, 0.3, 0.1],
+                                 [4300, 0.6, 0.3]]) ]
                       
 ```
 Light curves are `Lx3` matrices with time, magnitude, and magnitude std.
 To encode samples use:
 ```
 attention_vectors = model.encode(samples_collection,
-                                 oids_list=oids_list,
-                                 batch_size=10,
+                                 oids_list=['1', '2'],
+                                 batch_size=1,
                                  concatenate=True)
 ```
 where

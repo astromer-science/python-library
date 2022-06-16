@@ -89,6 +89,9 @@ model.compile(optimizer=optimizer)
 ```
 For large datasets is recommended to use Tensorflow Records ([see this tutorial to execute our data pipeline](https://github.com/astromer-science/main-code/blob/main/presentation/notebooks/create_records.ipynb)) 
 
+## Resources
+- [ASTROMER Tutorials](https://www.stellardnn.org/astromer/)
+
 ## Contributing to ASTROMER 🤝
 If you train your model from scratch, you can share your pre-trained weights by submitting a Pull Request on [the weights repository](https://github.com/astromer-science/weights)
 

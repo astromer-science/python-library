@@ -1,7 +1,5 @@
 # ASTROMER Python library 🔭
 
-version = 0.0.1
-
 ASTROMER is a transformer based model pretrained on millions of light curves. ASTROMER can be finetuned on specific datasets to create useful representations that can improve the performance of novel deep learning models.
 
 ❗ This version of ASTROMER can only works on single band light curves.
@@ -10,19 +8,19 @@ ASTROMER is a transformer based model pretrained on millions of light curves. AS
 
 ## Install
 ```
-pip install astromer
+pip install ASTROMER
 ```
 
 ## How to use it
 Currently, there are 2 pre-trained models: `macho` and `atlas`.
 To load weights use:
 ```
-from astromer import ASTROMER
+from ASTROMER.models import SingleBandEncoder
 
-model = ASTROMER()
+model = SingleBandEncoder()
 model.from_pretrained('macho')
 ```
-It will automatically download the weights from [this public github repository](https://github.com/astromer-science/weights.git) and load them into the `ASTROMER()` instance.
+It will automatically download the weights from [this public github repository](https://github.com/astromer-science/weights.git) and load them into the `SingleBandEncoder` instance.
 
 Assuming you have a list of vary-lenght (numpy) light curves.
 ```
@@ -48,21 +46,21 @@ where
 - `samples_collection` is a list of numpy array light curves
 - `oids_list` is a list with the light curves ids (needed to concatenate 200-len windows)
 - `batch_size` specify the number of samples per forward pass
--  when `concatenate=True` ASTROMER concatenates every 200-lenght windows belonging the same object id (remember this version of ASTROMER only works up to 200 observations). The output when `concatenate=True` is a list of vary-length attention vectors.
+-  when `concatenate=True` ASTROMER concatenates every 200-lenght windows belonging the same object id. The output when `concatenate=True` is a list of vary-length attention vectors.
 
 ## Finetuning or training from scratch
-`ASTROMER` is a [Tensorflow custom model](https://www.tensorflow.org/guide/keras/custom_layers_and_models#the_model_class). It means we can use the [`fit` method](https://www.tensorflow.org/api_docs/python/tf/keras/Model#fit) and [`callbacks`](https://www.tensorflow.org/api_docs/python/tf/keras/callbacks) as usual.
+`ASTROMER` can be easly trained by using the `fit`. It include
 
 ```
-from astromer import ASTROMER
+from ASTROMER import SingleBandEncoder
 
-model = ASTROMER(num_layers= 2,
-                 d_model   = 256,
-                 num_heads = 4,
-                 dff       = 128,
-                 base      = 1000,
-                 dropout   = 0.1,
-                 maxlen    = 200)
+model = SingleBandEncoder(num_layers= 2,
+                          d_model   = 256,
+                          num_heads = 4,
+                          dff       = 128,
+                          base      = 1000,
+                          dropout   = 0.1,
+                          maxlen    = 200)
 model.from_pretrained('macho')
 ```
 where,
@@ -75,19 +73,25 @@ where,
 - `maxlen`: Maximum length to process in the encoder
 Notice you can ignore `model.from_pretrained('macho')` for clean training.
 ```
-model.compile(optimizer='adam')
-mode.fit(data, epochs=100, callbacks=[], ...)
-mode.save()
+mode.fit(train_data,
+         validation_data,
+         epochs=2,
+         patience=20,
+         lr=1e-3,
+         project_path='./my_folder',
+         verbose=0)
 ```
-We recomend to use the `CustomSchedule` class to control the learning rate during training.
-i.e.,
-```
-from astromer import CustomSchedule
-learning_rate = CustomSchedule(d_model)
-optimizer     = tf.keras.optimizers.Adam(learning_rate,
-                                         beta_1=0.9, beta_2=0.98, epsilon=1e-9)
-model.compile(optimizer=optimizer)
-```
+where,
+- `train_data`: Training data already formatted as tf.data
+- `validation_data`: Validation data already formatted as tf.data
+- `epochs`: Number of epochs for training
+- `patience`: Early stopping patience
+- `lr`: Learning rate
+- `project_path`: Path for saving weights and training logs
+- `verbose`: (0) Display information during training (1) don't
+
+`train_data` and `validation_data` should be loaded using `load_numpy` or `pretraining_records` functions. Both functions are in the `ASTROMER.preprocessing` module.
+
 For large datasets is recommended to use Tensorflow Records ([see this tutorial to execute our data pipeline](https://github.com/astromer-science/main-code/blob/main/presentation/notebooks/create_records.ipynb))
 
 ## Resources

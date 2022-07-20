@@ -1,9 +1,2 @@
 include *.py
 include *.txt
-recursive-include src *.gz
-recursive-include src *.h5
-recursive-include src *.json
-recursive-include src *.pb
-recursive-include src *.py
-recursive-include src *.pyc
-recursive-include src *.v2

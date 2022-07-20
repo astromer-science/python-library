@@ -2,4 +2,4 @@
 import sys
 sys.path.append(sys.path[-1]+'/astromer_test')
 
-__version__ = "0.0.1"
+__version__ = "0.0.2"

@@ -52,4 +52,4 @@ dev = ["pip-tools", "pytest", "bumpver"]
 Homepage = "https://github.com/astromer-science/python-library"
 
 [project.scripts]
-astromer_test = "astromer_test.__main__:main"
+astromer_test = "ASTROMER.__main__:main"

@@ -5,8 +5,9 @@ import sys
 import os
 import shutil
 
-from astromer_test.models import SingleBandEncoder
-from astromer_test.preprocessing import load_numpy
+sys.path.append('../')
+from ASTROMER.models import SingleBandEncoder
+from ASTROMER.preprocessing import load_numpy
 
 @pytest.fixture
 def astromer():

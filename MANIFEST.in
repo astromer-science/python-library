@@ -1,2 +1,2 @@
-include *.py
-include *.txt
+include src/ASTROMER/*.py
+include src/ASTROMER/*.txt

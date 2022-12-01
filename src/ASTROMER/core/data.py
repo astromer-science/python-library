@@ -65,7 +65,6 @@ def divide_training_subset(frame, train, val, test_meta):
     Divide the dataset into train, validation and test subsets.
     Notice that:
         test = 1 - (train + val)
-
     Args:
         frame (Dataframe): Dataframe following the astro-standard format
         dest (string): Record destination.
@@ -79,7 +78,7 @@ def divide_training_subset(frame, train, val, test_meta):
     n_samples = frame.shape[0]
 
     n_train = int(n_samples*train)
-    n_val = int(n_samples*val//2)
+    n_val = int(n_samples*val)
 
     if test_meta is not None:
         sub_test = test_meta
@@ -90,7 +89,7 @@ def divide_training_subset(frame, train, val, test_meta):
         sub_val   = frame.iloc[n_train:n_train+n_val]
         sub_test  = frame.iloc[n_train+n_val:]
 
-    return ('train', sub_train), ('val', sub_val), ('test', test_meta)
+    return ('train', sub_train), ('val', sub_val), ('test', sub_test)
 
 @wrap_non_picklable_objects
 def process_lc2(row, source, unique_classes, **kwargs):
@@ -152,17 +151,25 @@ def create_dataset(meta_df,
     # Separate by class
     cls_groups = meta_df.groupby('Class')
 
+    test_already_written = False
+    if test_subset is not None:
+        for cls_name, frame in test_subset.groupby('Class'):
+            dest = os.path.join(target, 'test', cls_name)
+            os.makedirs(dest, exist_ok=True)
+            write_records(frame, dest, max_lcs_per_record, source, unique, n_jobs, **kwargs)
+        test_already_written = True
+
     for cls_name, cls_meta in tqdm(cls_groups, total=len(cls_groups)):
         subsets = divide_training_subset(cls_meta,
                                          train=subsets_frac[0],
-                                         val=subsets_frac[0],
+                                         val=subsets_frac[1],
                                          test_meta = test_subset)
 
         for subset_name, frame in subsets:
+            if test_already_written and subset_name == 'test':continue
             dest = os.path.join(target, subset_name, cls_name)
             os.makedirs(dest, exist_ok=True)
             write_records(frame, dest, max_lcs_per_record, source, unique, n_jobs, **kwargs)
-
 # ==============================
 # ====== LOADING FUNCTIONS =====
 # ==============================

@@ -1,3 +1,4 @@
-__version__ = "0.0.8"
+from pkgutil import extend_path
+__path__ = extend_path(__path__, __name__)
 
-import .core
+__version__ = "0.0.8"

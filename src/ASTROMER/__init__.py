@@ -5,4 +5,4 @@ print(sys.path)
 
 sys.path.append(sys.path[0], 'core')
 
-__version__ = "0.0.10"
+__version__ = "0.0.11"

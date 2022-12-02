@@ -1,6 +1,6 @@
 # pyproject.toml
 [tool.bumpver]
-current_version = "0.0.5"
+current_version = "0.0.6"
 version_pattern = "MAJOR.MINOR.PATCH"
 commit_message = "bump version {old_version} -> {new_version}"
 commit = true
@@ -17,7 +17,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ASTROMER"
-version = "0.0.5"
+version = "0.0.6"
 description = "Creates light curves embeddings using ASTROMER"
 readme = "README.md"
 authors = [{ name = "Cristobal Donoso-Oliva", email = "cridonoso@inf.udec.cl" }]
@@ -51,5 +51,5 @@ dev = ["pip-tools", "pytest", "bumpver"]
 [project.urls]
 Homepage = "https://github.com/astromer-science/python-library"
 
-[project.scripts]
-astromer_test = "ASTROMER.__main__:main"
+# [project.scripts]
+# astromer_test = "ASTROMER.__main__:main"

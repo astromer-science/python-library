@@ -1,6 +1,6 @@
 # pyproject.toml
 [tool.bumpver]
-current_version = "0.0.8"
+current_version = "0.0.9"
 version_pattern = "MAJOR.MINOR.PATCH"
 commit_message = "bump version {old_version} -> {new_version}"
 commit = true
@@ -17,7 +17,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ASTROMER"
-version = "0.0.8"
+version = "0.0.9"
 description = "Creates light curves embeddings using ASTROMER"
 readme = "README.md"
 authors = [{ name = "Cristobal Donoso-Oliva", email = "cridonoso@inf.udec.cl" }]

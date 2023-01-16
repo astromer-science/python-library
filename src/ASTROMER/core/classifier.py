@@ -7,14 +7,14 @@ from sklearn.metrics import precision_recall_fscore_support, accuracy_score
 from tensorflow.keras.layers import LSTM, Dense, BatchNormalization, LayerNormalization
 from tensorflow.keras.layers import Input, Dense
 from tensorflow.keras import Model
-from core.astromer import get_ASTROMER
-from core.metrics import custom_acc
-from core.tboard import save_scalar
-from core.losses import custom_bce
-from core.output import SauceLayer
+from ASTROMER.core.astromer import get_ASTROMER
+from ASTROMER.core.metrics import custom_acc
+from ASTROMER.core.tboard import save_scalar
+from ASTROMER.core.losses import custom_bce
+from ASTROMER.core.output import SauceLayer
 from tqdm import tqdm
 
-from core.data import standardize
+from ASTROMER.core.data import standardize
 logging.getLogger('tensorflow').setLevel(logging.ERROR)  # suppress warnings
 
 def get_fc_attention(units, num_classes, weigths):

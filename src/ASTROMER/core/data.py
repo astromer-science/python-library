@@ -5,8 +5,8 @@ import numpy as np
 import logging
 import os
 
-from core.masking import get_masked, set_random, get_padding_mask
-from core.utils import standardize
+from ASTROMER.core.masking import get_masked, set_random, get_padding_mask
+from ASTROMER.core.utils import standardize
 from joblib import Parallel, delayed
 from tqdm import tqdm
 

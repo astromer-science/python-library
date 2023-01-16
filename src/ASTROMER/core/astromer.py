@@ -2,11 +2,11 @@ import tensorflow as tf
 import logging
 import os, sys
 
-from core.output    import RegLayer
-from core.tboard    import save_scalar, draw_graph
-from core.losses    import custom_rmse, custom_bce
-from core.metrics   import custom_acc
-from core.encoder   import Encoder
+from ASTROMER.core.output    import RegLayer
+from ASTROMER.core.tboard    import save_scalar, draw_graph
+from ASTROMER.core.losses    import custom_rmse, custom_bce
+from ASTROMER.core.metrics   import custom_acc
+from ASTROMER.core.encoder   import Encoder
 
 from tensorflow.keras.layers import Input, Dense
 from tensorflow.keras.optimizers import Adam

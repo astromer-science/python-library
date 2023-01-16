@@ -1,8 +1,8 @@
 import tensorflow as tf
 
-from core.attention import MultiHeadAttention
-from core.positional import positional_encoding
-from core.masking import reshape_mask
+from ASTROMER.core.attention import MultiHeadAttention
+from ASTROMER.core.positional import positional_encoding
+from ASTROMER.core.masking import reshape_mask
 
 def point_wise_feed_forward_network(d_model, dff):
     return tf.keras.Sequential([

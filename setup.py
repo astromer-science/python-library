@@ -5,10 +5,15 @@ from setuptools import setup
 
 setup()
 
-# python -m pip install bumpver
+# Using bumpver we can automatically
+# version our library
+# to install: python -m pip install bumpver
 # bumpver init
 # bumpver update --minor
 
+# To upload our pkg we need to install:
 # python -m pip install build twine
 
-# python -m build
+# to create wheel and tar.gz: python -m build
+# to upload: twine upload -r testpypi dist/*
+# to upload official: twine upload -r pypi dist/*

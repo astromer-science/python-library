@@ -18,7 +18,7 @@ To load weights use:
 from ASTROMER.models import SingleBandEncoder
 
 model = SingleBandEncoder()
-model.from_pretrained('macho')
+model = model.from_pretraining('macho')
 ```
 It will automatically download the weights from [this public github repository](https://github.com/astromer-science/weights.git) and load them into the `SingleBandEncoder` instance.
 

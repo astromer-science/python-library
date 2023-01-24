@@ -3,9 +3,9 @@ import numpy as np
 import json
 import os
 
-from ASTROMER.core.astromer import get_ASTROMER, train, valid_step
-from ASTROMER.core.data import load_numpy
-from ASTROMER.utils import download_weights
+from .core.astromer import get_ASTROMER, train, valid_step
+from .core.data import load_numpy
+from utils import download_weights
 
 class SingleBandEncoder(object):
     """docstring for ASTROMER."""

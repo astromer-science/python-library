@@ -2,20 +2,19 @@ import tensorflow as tf
 
 
 def scaled_dot_product_attention(q, k, v, mask):
-    """Calculate the attention weights.
+    """
+    Calculate the attention weights.
     q, k, v must have matching leading dimensions.
     k, v must have matching penultimate dimension, i.e.: seq_len_k = seq_len_v.
     The mask has different shapes depending on its type(padding or look ahead)
     but it must be broadcastable for addition.
 
-    Args:
-    q: query shape == (..., seq_len_q, depth)
-    k: key shape == (..., seq_len_k, depth)
-    v: value shape == (..., seq_len_v, depth_v)
-    mask: Float tensor with shape broadcastable
-          to (..., seq_len_q, seq_len_k). Defaults to None.
+    :param q: query shape == (..., seq_len_q, depth)
+    :param k: key shape == (..., seq_len_k, depth)
+    :param v: value shape == (..., seq_len_v, depth_v)
+    :param mask: Float tensor with shape broadcastable to (..., seq_len_q, seq_len_k). Defaults to None.
 
-    Returns:
+    :return:
     output, attention_weights
     """
 
@@ -39,6 +38,11 @@ def scaled_dot_product_attention(q, k, v, mask):
     return output, attention_weights
 
 class MultiHeadAttention(tf.keras.layers.Layer):
+    """
+    TEXT ========
+
+    """
+
     def __init__(self, d_model, num_heads):
         super(MultiHeadAttention, self).__init__()
         self.num_heads = num_heads

@@ -12,7 +12,7 @@ import sys
 sys.path.insert(0, os.path.abspath(".."))
 
 
-project = 'astrotest'
+project = 'ASTROMER'
 copyright = '2023, Simon Salazar'
 author = 'Simon Salazar'
 release = '0.0.6'

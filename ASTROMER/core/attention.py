@@ -14,8 +14,7 @@ def scaled_dot_product_attention(q, k, v, mask):
     :param v: value shape == (..., seq_len_v, depth_v)
     :param mask: Float tensor with shape broadcastable to (..., seq_len_q, seq_len_k). Defaults to None.
 
-    :return:
-    output, attention_weights
+    :return: output, attention_weights
     """
 
     matmul_qk = tf.matmul(q, k, transpose_b=True)  # (..., seq_len_q, seq_len_k)
@@ -38,9 +37,9 @@ def scaled_dot_product_attention(q, k, v, mask):
     return output, attention_weights
 
 class MultiHeadAttention(tf.keras.layers.Layer):
+    
     """
-    TEXT ========
-
+    
     """
 
     def __init__(self, d_model, num_heads):
@@ -59,9 +58,11 @@ class MultiHeadAttention(tf.keras.layers.Layer):
         self.dense = tf.keras.layers.Dense(d_model, name='MixerDense')
 
     def split_heads(self, x, batch_size, name='qkv'):
+        
         """Split the last dimension into (num_heads, depth).
         Transpose the result such that the shape is (batch_size, num_heads, seq_len, depth)
         """
+
         x = tf.reshape(x, (batch_size, -1, self.num_heads, self.depth))
         return tf.transpose(x, perm=[0, 2, 1, 3], name=name)
 

@@ -1,10 +1,9 @@
-
 ================
 
 astromer
 ------------------------
 
-.. automodule:: src.core.astromer
+.. automodule:: ASTROMER.core.astromer
    :members:
    :undoc-members:
    :show-inheritance:
@@ -12,7 +11,7 @@ astromer
 attention
 -------------------------
 
-.. automodule:: src.core.attention
+.. automodule:: ASTROMER.core.attention
    :members:
    :undoc-members:
    :show-inheritance:
@@ -20,7 +19,7 @@ attention
 classifier
 --------------------------
 
-.. automodule:: src.core.classifier
+.. automodule:: ASTROMER.core.classifier
    :members:
    :undoc-members:
    :show-inheritance:
@@ -28,7 +27,7 @@ classifier
 data
 --------------------
 
-.. automodule:: src.core.data
+.. automodule:: ASTROMER.core.data
    :members:
    :undoc-members:
    :show-inheritance:
@@ -36,7 +35,7 @@ data
 encoder
 -----------------------
 
-.. automodule:: src.core.encoder
+.. automodule:: ASTROMER.core.encoder
    :members:
    :undoc-members:
    :show-inheritance:
@@ -44,7 +43,7 @@ encoder
 losses
 ----------------------
 
-.. automodule:: src.core.losses
+.. automodule:: ASTROMER.core.losses
    :members:
    :undoc-members:
    :show-inheritance:
@@ -52,7 +51,7 @@ losses
 masking
 -----------------------
 
-.. automodule:: src.core.masking
+.. automodule:: ASTROMER.core.masking
    :members:
    :undoc-members:
    :show-inheritance:
@@ -60,7 +59,7 @@ masking
 metrics
 -----------------------
 
-.. automodule:: src.core.metrics
+.. automodule:: ASTROMER.core.metrics
    :members:
    :undoc-members:
    :show-inheritance:
@@ -68,7 +67,7 @@ metrics
 output
 ----------------------
 
-.. automodule:: src.core.output
+.. automodule:: ASTROMER.core.output
    :members:
    :undoc-members:
    :show-inheritance:
@@ -76,7 +75,7 @@ output
 plots
 ---------------------
 
-.. automodule:: src.core.plots
+.. automodule:: ASTROMER.core.plots
    :members:
    :undoc-members:
    :show-inheritance:
@@ -84,7 +83,7 @@ plots
 positional
 --------------------------
 
-.. automodule:: src.core.positional
+.. automodule:: ASTROMER.core.positional
    :members:
    :undoc-members:
    :show-inheritance:
@@ -92,7 +91,7 @@ positional
 scheduler
 -------------------------
 
-.. automodule:: src.core.scheduler
+.. automodule:: ASTROMER.core.scheduler
    :members:
    :undoc-members:
    :show-inheritance:
@@ -100,7 +99,7 @@ scheduler
 tboard
 ----------------------
 
-.. automodule:: src.core.tboard
+.. automodule:: ASTROMER.core.tboard
    :members:
    :undoc-members:
    :show-inheritance:
@@ -108,7 +107,7 @@ tboard
 utils
 ---------------------
 
-.. automodule:: src.core.utils
+.. automodule:: ASTROMER.core.utils
    :members:
    :undoc-members:
    :show-inheritance:

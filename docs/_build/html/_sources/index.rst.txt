@@ -21,5 +21,4 @@ This project `was published <https://arxiv.org/abs/2205.01677/>`_ by C. Donoso-O
    :maxdepth: 2
    :caption: LIBRARY DOCUMENTATION
 
-   src
-
+   ASTROMER

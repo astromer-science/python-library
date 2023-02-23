@@ -1,10 +1,5 @@
-.. astrotest documentation master file, created by
-   sphinx-quickstart on Fri Feb  3 11:07:06 2023.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Welcome to ASTROMER documentation!
-=====================================
+**********************************************************
 
 **ASTROMER** is a transformer based model pretrained on millions of light curves. ASTROMER can be finetuned on specific datasets to create useful representations that can improve the performance of novel deep learning models.
 
@@ -15,11 +10,9 @@ This project `was published <https://arxiv.org/abs/2205.01677/>`_ by C. Donoso-O
 .. important::
 
     This sample documentation was generated on |today|, and is rebuilt weekly.
-
-
 .. toctree::
    :maxdepth: 4
    :caption: LIBRARY DOCUMENTATION
 
-   modules
+   ASTROMER
    

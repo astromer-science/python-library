@@ -1,13 +1,11 @@
-ASTROMER
-****************************
 
-Models
+ASTROMER MODELS
 ============================
-
-.. epigraph:: The **Single-Band Encoder** represents the main class of the models, which load, fit, encode and train the preprocessed weights.
 
 SingleBandEncoder
 ----------------------------
+
+.. epigraph:: The **Single-Band Encoder** represents the main class of the models, which load, fit, encode and train the preprocessed weights.
 
 .. epigraph:: The Single-Band encoder took every single-band light curve that may vary between different stars, and this depends on the objectives of the survey being carried out. 
 .. epigraph:: The X is a set of observations of a celestial object over time (such as a star). Each observation had two characteristics: the magnitude (brightness) of the object and the Modified Julian Date (MJD) when the observation was made.
@@ -15,10 +13,9 @@ SingleBandEncoder
 .. epigraph:: We propose to use learned representations of a transformer-based encoder to create embeddings that represent the variability of objects in dk.dimensional space.
 .. epigraph:: We can fine-tune the model weights to match other surveys and use them to solve downstream task, such as classification or regression.
 
-.. automodule:: ASTROMER.models
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+.. autoclass:: ASTROMER.models.SingleBandEncoder
+    :members:
 
 Preprocessing
 ============================
@@ -84,7 +81,7 @@ Assuming you have a list of vary-lenght (numpy) light curves.
 
 
 Fine Tune
-----------------
+-----------------------------------------------
 
 .. epigraph:: `ASTROMER` can be easly trained by using the `fit`. It include
 
@@ -136,11 +133,17 @@ Notice you can ignore `model.from_pretrained('macho')` for clean training.
 
 .. epigraph:: For large datasets is recommended to use Tensorflow Records `see this tutorial to execute our data pipeline <https://github.com/astromer-science/main-code/blob/main/presentation/notebooks/create_records.ipynb>`_
 
+.. toctree::
+   :maxdepth: 1
+   :caption: Go deep in our models
+
+   ASTROMER.core
+
 Resources
-----------------
+-----------------------------------------------
 - `ASTROMER Documentation <https://astromer.readthedocs.io/en/latest/>`_
 - `ASTROMER Tutorials <https://www.stellardnn.org/astromer/>`_
 
  Contributing to ASTROMER 🤝
- ----------------
+-----------------------------------------------
 If you train your model from scratch, you can share your pre-trained weights by submitting a Pull Request on `the weights repository <https://github.com/astromer-science/weights>`_

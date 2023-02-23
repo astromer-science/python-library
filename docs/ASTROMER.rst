@@ -5,9 +5,6 @@ Models
 ============================
 
 
-Single-Band Encoder
------------------
-
 .. epigraph::
 The **Single-Band Encoder** represents the main class of the models, which load, fit, encode and train the preprocessed weights.
 
@@ -19,7 +16,8 @@ The X is a set of observations of a celestial object over time (such as a star).
 We propose to use learned representations of a transformer-based encoder to create embeddings that represent the variability of objects in dk.dimensional space.
 We can fine-tune the model weights to match other surveys and use them to solve downstream task, such as classification or regression.
 
-
+Single-Band Encoder
+-----------------
 
 .. automodule:: ASTROMER.models
    :members:

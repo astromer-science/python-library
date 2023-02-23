@@ -7,6 +7,7 @@ Models
 
 Single-Band Encoder
 -----------------
+
 .. epigraph::
 The **Single-Band Encoder** represents the main class of the models, which load, fit, encode and train the preprocessed weights.
 
@@ -24,6 +25,7 @@ We can fine-tune the model weights to match other surveys and use them to solve 
    :members:
    :undoc-members:
    :show-inheritance:
+
 
 
 Preprocessing
@@ -85,8 +87,7 @@ Assuming you have a list of vary-lenght (numpy) light curves.
                                    [5400, 0.2, 0.3]]),
 
 
-.. epigraph::
-Light curves are Lx3 matrices with time, magnitude, and magnitude std. To encode samples use:
+.. epigraph:: Light curves are Lx3 matrices with time, magnitude, and magnitude std. To encode samples use:
 
 .. code-block:: python
 
@@ -100,7 +101,7 @@ Light curves are Lx3 matrices with time, magnitude, and magnitude std. To encode
 Fine Tune
 ----------------
 
-`ASTROMER` can be easly trained by using the `fit`. It include
+.. epigraph:: `ASTROMER` can be easly trained by using the `fit`. It include
 
 .. code-block:: python
    
@@ -116,7 +117,7 @@ Fine Tune
                    
    model.from_pretrained('macho')
 
-where,
+.. epigraph:: where,
 
 - `num_layers`: Number of self-attention blocks
 - `d_model`: Self-attention block dimension (must be divisible by `num_heads`)
@@ -136,7 +137,7 @@ Notice you can ignore `model.from_pretrained('macho')` for clean training.
          project_path='./my_folder',
          verbose=0)
 
-where,
+.. epigraph:: where,
 
 - `train_data`: Training data already formatted as tf.data
 - `validation_data`: Validation data already formatted as tf.data
@@ -148,7 +149,7 @@ where,
 
 `train_data` and `validation_data` should be loaded using `load_numpy` or `pretraining_records` functions. Both functions are in the `ASTROMER.preprocessing` module.
 
-For large datasets is recommended to use Tensorflow Records `see this tutorial to execute our data pipeline <https://github.com/astromer-science/main-code/blob/main/presentation/notebooks/create_records.ipynb>`_
+.. epigraph:: For large datasets is recommended to use Tensorflow Records `see this tutorial to execute our data pipeline <https://github.com/astromer-science/main-code/blob/main/presentation/notebooks/create_records.ipynb>`_
 
 Resources
 ----------------

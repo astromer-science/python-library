@@ -8,6 +8,7 @@ from ASTROMER.utils import download_weights
 from ASTROMER.core.data import load_numpy
 
 class SingleBandEncoder(object):
+    
     """
         This class is a transformer-based model that process the input and generate a fixed-size representation
         Since each light curve has two characteristics (magnitude and time) we transform into
@@ -39,6 +40,7 @@ class SingleBandEncoder(object):
 
         :param batch_size: Number of samples to be used in a forward pass. Note an epoch is completed when all batches were processed (default none).
         :type batch_size: Integer
+        
     """
 
 

@@ -7,6 +7,7 @@ Models
 
 Single-Band Encoder
 -----------------
+
 .. epigraph::
 The **Single-Band Encoder** represents the main class of the models, which load, fit, encode and train the preprocessed weights.
 

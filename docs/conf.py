@@ -27,6 +27,7 @@ extensions = ["sphinx_rtd_theme", "sphinx.ext.todo", "sphinx.ext.viewcode", "sph
 
 autodoc_typehints = "description"
 
+
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 

@@ -15,7 +15,3 @@ This project `was published <https://arxiv.org/abs/2205.01677/>`_ by C. Donoso-O
    :caption: LIBRARY DOCUMENTATION
 
    ASTROMER
-<<<<<<< HEAD
-   
-=======
->>>>>>> be9dbed0b38b8d47c84d71aab46c22cc4cf0fa26

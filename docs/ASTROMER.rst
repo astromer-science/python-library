@@ -1,7 +1,7 @@
 ASTROMER MODELS
 ============================  
 
-SingleBandEncoder
+Single-Band Encoder
 ----------------------------
 
 .. epigraph:: The **Single-Band Encoder** represents the main class of the models, which load, fit, encode and train the preprocessed weights.
@@ -12,10 +12,14 @@ SingleBandEncoder
 .. epigraph:: We propose to use learned representations of a transformer-based encoder to create embeddings that represent the variability of objects in dk.dimensional space. Making easy to fine-tune the model weights to match other surveys and use them to solve downstream task, such as classification or regression.
 
 
-.. autoclass:: ASTROMER.models.SingleBandEncoder(object)
-    :members:
+TEXT
+============================
 
-HOLI
+.. autoclass:: ASTROMER.models.SingleBandEncoder(object)
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 
 Preprocessing
 ============================
@@ -134,7 +138,7 @@ Fine Tune
 .. epigraph:: For large datasets is recommended to use Tensorflow Records `see this tutorial to execute our data pipeline <https://github.com/astromer-science/main-code/blob/main/presentation/notebooks/create_records.ipynb>`_
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Go deep in our models
 
    ASTROMER.core

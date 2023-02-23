@@ -44,14 +44,15 @@
               <p class="caption" role="heading"><span class="caption-text">LIBRARY DOCUMENTATION</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">ASTROMER MODELS</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#singlebandencoder">SingleBandEncoder</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.encode"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.encode()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.fit"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.fit()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.from_pretraining"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.from_pretraining()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.load_weights"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.load_weights()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#single-band-encoder">Single-Band Encoder</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="#text">TEXT</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.encode"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.encode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.fit"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.from_pretraining"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.from_pretraining()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.load_weights"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.load_weights()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -98,8 +99,8 @@
              
   <section id="astromer-models">
 <h1>ASTROMER MODELS<a class="headerlink" href="#astromer-models" title="Permalink to this heading"></a></h1>
-<section id="singlebandencoder">
-<h2>SingleBandEncoder<a class="headerlink" href="#singlebandencoder" title="Permalink to this heading"></a></h2>
+<section id="single-band-encoder">
+<h2>Single-Band Encoder<a class="headerlink" href="#single-band-encoder" title="Permalink to this heading"></a></h2>
 <blockquote class="epigraph">
 <div><p>The <strong>Single-Band Encoder</strong> represents the main class of the models, which load, fit, encode and train the preprocessed weights.</p>
 </div></blockquote>
@@ -112,10 +113,15 @@
 <blockquote class="epigraph">
 <div><p>We propose to use learned representations of a transformer-based encoder to create embeddings that represent the variability of objects in dk.dimensional space. Making easy to fine-tune the model weights to match other surveys and use them to solve downstream task, such as classification or regression.</p>
 </div></blockquote>
+</section>
+</section>
+<section id="text">
+<h1>TEXT<a class="headerlink" href="#text" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ASTROMER.models.SingleBandEncoder">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ASTROMER.models.</span></span><span class="sig-name descname"><span class="pre">SingleBandEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/models.html#SingleBandEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.models.SingleBandEncoder" title="Permalink to this definition"></a></dt>
-<dd><p>This class is a transformer-based model that process the input and generate a fixed-size representation
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class is a transformer-based model that process the input and generate a fixed-size representation
 Since each light curve has two characteristics (magnitude and time) we transform into
 embeddings Z = 200x256.</p>
 <p>The maximum number of observations remain fixed and masked, so every Z had the same length even if some
@@ -210,8 +216,6 @@ The method first checks the format of the dataset containing the light curves.</
 
 </dd></dl>
 
-<p>HOLI</p>
-</section>
 </section>
 <section id="module-ASTROMER.preprocessing">
 <span id="preprocessing"></span><h1>Preprocessing<a class="headerlink" href="#module-ASTROMER.preprocessing" title="Permalink to this heading"></a></h1>

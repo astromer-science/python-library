@@ -4,7 +4,7 @@ ASTROMER MODELS
 
 
 
-.. autoclass:: ASTROMER.models.SingleBandEncoder
+.. automodule:: ASTROMER.models.SingleBandEncoder.__init__
     :members:
     
 

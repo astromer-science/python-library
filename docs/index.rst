@@ -11,9 +11,6 @@ This project `was published <https://arxiv.org/abs/2205.01677/>`_ by C. Donoso-O
 
     This sample documentation was generated on |today|, and is rebuilt weekly.
 
-.. automodule:: ASTROMER.models
-    :members:
-
 .. toctree::
    :maxdepth: 4
    :caption: LIBRARY DOCUMENTATION

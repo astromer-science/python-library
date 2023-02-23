@@ -12,10 +12,9 @@ import sys
 
 sys.path.insert(0, os.path.abspath(".."))
 
-
 project = 'ASTROMER'
-copyright = '2023, Cristobal Donoso-Oliva'
-author = 'Cristobal Donoso-Oliva'
+copyright = '2023, Simon Salazar'
+author = 'Simon Salazar'
 release = '0.0.6'
 
 # -- General configuration ---------------------------------------------------

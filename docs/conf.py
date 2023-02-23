@@ -24,7 +24,9 @@ extensions = ["sphinx_rtd_theme", "sphinx.ext.todo", "sphinx.ext.viewcode", "sph
 
 # Automatically extract typehints when specified and place them in
 # descriptions of the relevant function/method.
+
 autodoc_typehints = "description"
+
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']

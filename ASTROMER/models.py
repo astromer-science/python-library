@@ -38,7 +38,7 @@ class SingleBandEncoder(object):
         :type maxlen: Integer
 
         :param batch_size: Number of samples to be used in a forward pass. Note an epoch is completed when all batches were processed (default none).
-        :type batch_size: Integer
+        :type batch_size: Integer  
     """
 
 

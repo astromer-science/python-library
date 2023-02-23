@@ -4,26 +4,21 @@ ASTROMER
 Models
 ============================
 
+.. epigraph:: The **Single-Band Encoder** represents the main class of the models, which load, fit, encode and train the preprocessed weights.
 
-.. epigraph::
-The **Single-Band Encoder** represents the main class of the models, which load, fit, encode and train the preprocessed weights.
+SingleBandEncoder
+----------------------------
 
-.. epigraph::
-The Single-Band encoder took every single-band light curve that may vary between different stars, and this depends on the objectives of the survey being carried out.
-The X is a set of observations of a celestial object over time (such as a star). Each observation had two characteristics: the magnitude (brightness) of the object and the Modified Julian Date (MJD) when the observation was made.
+.. epigraph:: The Single-Band encoder took every single-band light curve that may vary between different stars, and this depends on the objectives of the survey being carried out. 
+.. epigraph:: The X is a set of observations of a celestial object over time (such as a star). Each observation had two characteristics: the magnitude (brightness) of the object and the Modified Julian Date (MJD) when the observation was made.
 
-.. epigraph::
-We propose to use learned representations of a transformer-based encoder to create embeddings that represent the variability of objects in dk.dimensional space.
-We can fine-tune the model weights to match other surveys and use them to solve downstream task, such as classification or regression.
-
-Single-Band Encoder
------------------
+.. epigraph:: We propose to use learned representations of a transformer-based encoder to create embeddings that represent the variability of objects in dk.dimensional space.
+.. epigraph:: We can fine-tune the model weights to match other surveys and use them to solve downstream task, such as classification or regression.
 
 .. automodule:: ASTROMER.models
    :members:
    :undoc-members:
    :show-inheritance:
-
 
 Preprocessing
 ============================
@@ -41,27 +36,20 @@ Utils
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
-
-.. automodule:: ASTROMER
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
 Quick-start
 ============================
 
-**Install**
+.. epigraph:: **Install**
 
-.. epigraph::
-  First, install the ASTROMER wheel using pip
+.. epigraph:: First, install the ASTROMER wheel using pip
 
 .. code-block:: python
+   
+   pip install ASTROMER
+   
+.. code-block:: python
 
-  !pip install ASTROMER
-  from ASTROMER.models import SingleBandEncoder
+   from ASTROMER.models import SingleBandEncoder
 
 .. epigraph::
   Then initiate
@@ -84,8 +72,7 @@ Assuming you have a list of vary-lenght (numpy) light curves.
                                    [5400, 0.2, 0.3]]),
 
 
-.. epigraph::
-Light curves are Lx3 matrices with time, magnitude, and magnitude std. To encode samples use:
+.. epigraph:: Light curves are Lx3 matrices with time, magnitude, and magnitude std. To encode samples use:
 
 .. code-block:: python
 
@@ -99,7 +86,7 @@ Light curves are Lx3 matrices with time, magnitude, and magnitude std. To encode
 Fine Tune
 ----------------
 
-`ASTROMER` can be easly trained by using the `fit`. It include
+.. epigraph:: `ASTROMER` can be easly trained by using the `fit`. It include
 
 .. code-block:: python
    
@@ -115,7 +102,7 @@ Fine Tune
                    
    model.from_pretrained('macho')
 
-where,
+.. epigraph:: where,
 
 - `num_layers`: Number of self-attention blocks
 - `d_model`: Self-attention block dimension (must be divisible by `num_heads`)
@@ -135,7 +122,7 @@ Notice you can ignore `model.from_pretrained('macho')` for clean training.
          project_path='./my_folder',
          verbose=0)
 
-where,
+.. epigraph:: where,
 
 - `train_data`: Training data already formatted as tf.data
 - `validation_data`: Validation data already formatted as tf.data
@@ -147,7 +134,7 @@ where,
 
 `train_data` and `validation_data` should be loaded using `load_numpy` or `pretraining_records` functions. Both functions are in the `ASTROMER.preprocessing` module.
 
-For large datasets is recommended to use Tensorflow Records `see this tutorial to execute our data pipeline <https://github.com/astromer-science/main-code/blob/main/presentation/notebooks/create_records.ipynb>`_
+.. epigraph:: For large datasets is recommended to use Tensorflow Records `see this tutorial to execute our data pipeline <https://github.com/astromer-science/main-code/blob/main/presentation/notebooks/create_records.ipynb>`_
 
 Resources
 ----------------

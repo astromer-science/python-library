@@ -18,9 +18,7 @@ This project `was published <https://arxiv.org/abs/2205.01677/>`_ by C. Donoso-O
 
 
 .. toctree::
-
-   :maxdepth: 3
+   :maxdepth: 4
    :caption: LIBRARY DOCUMENTATION
 
    ASTROMER
-   ASTROMER.models

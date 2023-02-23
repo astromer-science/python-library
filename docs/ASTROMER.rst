@@ -13,9 +13,10 @@ SingleBandEncoder
 .. epigraph:: We propose to use learned representations of a transformer-based encoder to create embeddings that represent the variability of objects in dk.dimensional space. Making easy to fine-tune the model weights to match other surveys and use them to solve downstream task, such as classification or regression.
 
 
-.. autoclass:: ASTROMER.models
+.. autoclass:: ASTROMER.models.SingleBandEncoder(object)
     :members:
 
+HOLI
 
 Preprocessing
 ============================
@@ -55,10 +56,8 @@ Quick-start
 
   model = SingleBandEncoder()
   model = model.from_pretraining('macho')
-.. epigraph::
-It will automatically download the weights from this public github repository and load them into the SingleBandEncoder instance.
-Assuming you have a list of vary-lenght (numpy) light curves.
 
+.. epigraph:: It will automatically download the weights from this public github repository and load them into the SingleBandEncoder instance. Assuming you have a list of vary-lenght (numpy) light curves.
 
 .. code-block:: python
 
@@ -108,9 +107,11 @@ Fine Tune
 - `base`: Positional encoder base (see formula)
 - `dropout`: Dropout applied to output of the fully-connected layer
 - `maxlen`: Maximum length to process in the encoder
-Notice you can ignore `model.from_pretrained('macho')` for clean training.
+
+.. epigraph:: Notice you can ignore `model.from_pretrained('macho')` for clean training.
 
 .. code-block:: python
+
    mode.fit(train_data,
          validation_data,
          epochs=2,
@@ -141,9 +142,11 @@ Notice you can ignore `model.from_pretrained('macho')` for clean training.
 
 Resources
 -----------------------------------------------
+
 - `ASTROMER Documentation <https://astromer.readthedocs.io/en/latest/>`_
 - `ASTROMER Tutorials <https://www.stellardnn.org/astromer/>`_
 
- Contributing to ASTROMER 🤝
------------------------------------------------
-If you train your model from scratch, you can share your pre-trained weights by submitting a Pull Request on `the weights repository <https://github.com/astromer-science/weights>`_
+Contributing to ASTROMER
+---------------------------------------------
+
+.. epigraph:: If you train your model from scratch, you can share your pre-trained weights by submitting a Pull Request on `the weights repository <https://github.com/astromer-science/weights>`_

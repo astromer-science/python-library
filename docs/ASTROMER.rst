@@ -1,12 +1,6 @@
 
 ASTROMER MODELS
-============================
-
-
-
-.. automodule:: ASTROMER.models.SingleBandEncoder.__init__
-    :members:
-    
+============================  
 
 SingleBandEncoder
 ----------------------------
@@ -18,6 +12,9 @@ SingleBandEncoder
 
 .. epigraph:: We propose to use learned representations of a transformer-based encoder to create embeddings that represent the variability of objects in dk.dimensional space. Making easy to fine-tune the model weights to match other surveys and use them to solve downstream task, such as classification or regression.
 
+
+.. automodule:: ASTROMER.models
+    :members:
 
 
 Preprocessing

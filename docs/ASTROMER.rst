@@ -11,14 +11,10 @@ Single-Band Encoder
 
 .. epigraph:: We propose to use learned representations of a transformer-based encoder to create embeddings that represent the variability of objects in dk.dimensional space. Making easy to fine-tune the model weights to match other surveys and use them to solve downstream task, such as classification or regression.
 
-
-TEXT
-============================
-
 .. autoclass:: ASTROMER.models.SingleBandEncoder(object)
    :members:
    :undoc-members:
-   :show-inheritance:
+   :show-inheritance: 
 
 
 Preprocessing

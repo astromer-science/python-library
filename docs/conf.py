@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.abspath(".."))
 
 project = 'ASTROMER'
 copyright = '2023, Simon Salazar'
-author = 'Simon Salazar'
+author = 'Cristobal Donoso-Oliva'
 release = '0.0.6'
 
 # -- General configuration ---------------------------------------------------

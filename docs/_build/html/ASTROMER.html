@@ -44,15 +44,14 @@
               <p class="caption" role="heading"><span class="caption-text">LIBRARY DOCUMENTATION</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">ASTROMER MODELS</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#single-band-encoder">Single-Band Encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#single-band-encoder">Single-Band Encoder</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.encode"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.encode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.fit"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.from_pretraining"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.from_pretraining()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.load_weights"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.load_weights()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="#text">TEXT</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.encode"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.encode()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.fit"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.fit()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.from_pretraining"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.from_pretraining()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.load_weights"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.load_weights()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -113,10 +112,6 @@
 <blockquote class="epigraph">
 <div><p>We propose to use learned representations of a transformer-based encoder to create embeddings that represent the variability of objects in dk.dimensional space. Making easy to fine-tune the model weights to match other surveys and use them to solve downstream task, such as classification or regression.</p>
 </div></blockquote>
-</section>
-</section>
-<section id="text">
-<h1>TEXT<a class="headerlink" href="#text" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ASTROMER.models.SingleBandEncoder">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ASTROMER.models.</span></span><span class="sig-name descname"><span class="pre">SingleBandEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/models.html#SingleBandEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.models.SingleBandEncoder" title="Permalink to this definition"></a></dt>
@@ -216,6 +211,7 @@ The method first checks the format of the dataset containing the light curves.</
 
 </dd></dl>
 
+</section>
 </section>
 <section id="module-ASTROMER.preprocessing">
 <span id="preprocessing"></span><h1>Preprocessing<a class="headerlink" href="#module-ASTROMER.preprocessing" title="Permalink to this heading"></a></h1>
@@ -340,7 +336,23 @@ The UTILS module it’s a set of functions that allow performing functions not c
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Go deep in our models</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="ASTROMER.core.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ASTROMER.core.html">Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ASTROMER.core.html#module-ASTROMER.core.astromer">astromer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ASTROMER.core.html#module-ASTROMER.core.attention">attention</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ASTROMER.core.html#classifier">classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ASTROMER.core.html#module-ASTROMER.core.data">data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ASTROMER.core.html#module-ASTROMER.core.encoder">encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ASTROMER.core.html#module-ASTROMER.core.losses">losses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ASTROMER.core.html#module-ASTROMER.core.masking">masking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ASTROMER.core.html#module-ASTROMER.core.metrics">metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ASTROMER.core.html#module-ASTROMER.core.output">output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ASTROMER.core.html#module-ASTROMER.core.plots">plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ASTROMER.core.html#module-ASTROMER.core.positional">positional</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ASTROMER.core.html#module-ASTROMER.core.scheduler">scheduler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ASTROMER.core.html#module-ASTROMER.core.tboard">tboard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ASTROMER.core.html#module-ASTROMER.core.utils">utils</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </section>

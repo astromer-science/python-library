@@ -4,10 +4,10 @@ ASTROMER
 Models
 ============================
 
+.. epigraph:: The **Single-Band Encoder** represents the main class of the models, which load, fit, encode and train the preprocessed weights.
+
 SingleBandEncoder
 ----------------------------
-
-.. epigraph:: The **Single-Band Encoder** represents the main class of the models, which load, fit, encode and train the preprocessed weights.
 
 .. epigraph:: The Single-Band encoder took every single-band light curve that may vary between different stars, and this depends on the objectives of the survey being carried out. 
 .. epigraph:: The X is a set of observations of a celestial object over time (such as a star). Each observation had two characteristics: the magnitude (brightness) of the object and the Modified Julian Date (MJD) when the observation was made.
@@ -19,7 +19,6 @@ SingleBandEncoder
    :members:
    :undoc-members:
    :show-inheritance:
-
 
 Preprocessing
 ============================

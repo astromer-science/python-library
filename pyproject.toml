@@ -47,6 +47,7 @@ dependencies = [
   'numpy',
   'pandas',
   'tqdm',
+  'scikit-learn',
   'seaborn',
   'scipy',
   'sphinx_rtd_theme',

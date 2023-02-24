@@ -40,7 +40,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">LIBRARY DOCUMENTATION</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../ASTROMER.html">ASTROMER MODELS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ASTROMER.html">Single-Band Encoder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../ASTROMER.html#module-ASTROMER.preprocessing">Preprocessing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../ASTROMER.html#module-ASTROMER.utils">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../ASTROMER.html#quick-start">Quick-start</a></li>
@@ -82,7 +82,7 @@
 
 
 
-<div class="viewcode-block" id="SingleBandEncoder"><a class="viewcode-back" href="../../index.html#ASTROMER.models.SingleBandEncoder">[docs]</a><span class="k">class</span> <span class="nc">SingleBandEncoder</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="SingleBandEncoder"><a class="viewcode-back" href="../../ASTROMER.html#ASTROMER.models.SingleBandEncoder">[docs]</a><span class="k">class</span> <span class="nc">SingleBandEncoder</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This class is a transformer-based model that process the input and generate a fixed-size representation</span>
 <span class="sd">        Since each light curve has two characteristics (magnitude and time) we transform into</span>
@@ -90,7 +90,7 @@
 
 <span class="sd">        The maximum number of observations remain fixed and masked, so every Z had the same length even if some</span>
 <span class="sd">        light curves are shorter than others.</span>
-
+<span class="sd">    </span>
 <span class="sd">        :param num_layer: Number of self-attention blocks or transformer layers in the encoder.</span>
 <span class="sd">        :type num_layer: Integer</span>
 
@@ -146,7 +146,7 @@
                                   <span class="n">no_train</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                   <span class="n">maxlen</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">maxlen</span><span class="p">,</span>
                                   <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
-<div class="viewcode-block" id="SingleBandEncoder.fit"><a class="viewcode-back" href="../../index.html#ASTROMER.models.SingleBandEncoder.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<div class="viewcode-block" id="SingleBandEncoder.fit"><a class="viewcode-back" href="../../ASTROMER.html#ASTROMER.models.SingleBandEncoder.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
             <span class="n">train_batches</span><span class="p">,</span>
             <span class="n">valid_batches</span><span class="p">,</span>
             <span class="n">epochs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
@@ -189,7 +189,7 @@
               <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
               <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SingleBandEncoder.encode"><a class="viewcode-back" href="../../index.html#ASTROMER.models.SingleBandEncoder.encode">[docs]</a>    <span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<div class="viewcode-block" id="SingleBandEncoder.encode"><a class="viewcode-back" href="../../ASTROMER.html#ASTROMER.models.SingleBandEncoder.encode">[docs]</a>    <span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                <span class="n">dataset</span><span class="p">,</span>
                <span class="n">oids_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -254,7 +254,7 @@
             <span class="k">return</span> <span class="n">final_att</span>
         <span class="k">return</span> <span class="n">att</span></div>
 
-<div class="viewcode-block" id="SingleBandEncoder.load_weights"><a class="viewcode-back" href="../../index.html#ASTROMER.models.SingleBandEncoder.load_weights">[docs]</a>    <span class="k">def</span> <span class="nf">load_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weights_folder</span><span class="p">):</span>
+<div class="viewcode-block" id="SingleBandEncoder.load_weights"><a class="viewcode-back" href="../../ASTROMER.html#ASTROMER.models.SingleBandEncoder.load_weights">[docs]</a>    <span class="k">def</span> <span class="nf">load_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weights_folder</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The ‘load_weights()’ method loads pre-trained parameters into the model architecture. The method loads the weights from the file located at {weights_folder}/weights directory, which is assumed to be in TensorFlow checkpoint format.</span>
 
@@ -265,7 +265,7 @@
         <span class="n">weights_path</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/weights&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">weights_folder</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="n">weights_path</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SingleBandEncoder.from_pretraining"><a class="viewcode-back" href="../../index.html#ASTROMER.models.SingleBandEncoder.from_pretraining">[docs]</a>    <span class="k">def</span> <span class="nf">from_pretraining</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;macho&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="SingleBandEncoder.from_pretraining"><a class="viewcode-back" href="../../ASTROMER.html#ASTROMER.models.SingleBandEncoder.from_pretraining">[docs]</a>    <span class="k">def</span> <span class="nf">from_pretraining</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;macho&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Loads a pre-trained model with pre-trained weights for a specific astronomical dataset. This method allows users to easily load pre-trained models for astronomical time-series datasets and use them for their purposes.</span>
 

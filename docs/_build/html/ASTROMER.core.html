@@ -50,7 +50,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Modules</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-ASTROMER.core.astromer">astromer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ASTROMER.core.attention">attention</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#classifier">classifier</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ASTROMER.core.classifier">classifier</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ASTROMER.core.data">data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ASTROMER.core.encoder">encoder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ASTROMER.core.losses">losses</a></li>
@@ -226,8 +226,61 @@ but it must be broadcastable for addition.</p>
 </dd></dl>
 
 </section>
-<section id="classifier">
-<h2>classifier<a class="headerlink" href="#classifier" title="Permalink to this heading"></a></h2>
+<section id="module-ASTROMER.core.classifier">
+<span id="classifier"></span><h2>classifier<a class="headerlink" href="#module-ASTROMER.core.classifier" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.classifier.get_conf">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.classifier.</span></span><span class="sig-name descname"><span class="pre">get_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/classifier.html#get_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.classifier.get_conf" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.classifier.get_fc_attention">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.classifier.</span></span><span class="sig-name descname"><span class="pre">get_fc_attention</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">units</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weigths</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/classifier.html#get_fc_attention"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.classifier.get_fc_attention" title="Permalink to this definition"></a></dt>
+<dd><p>FC + ATT</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.classifier.get_lstm_attention">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.classifier.</span></span><span class="sig-name descname"><span class="pre">get_lstm_attention</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">units</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weigths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/classifier.html#get_lstm_attention"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.classifier.get_lstm_attention" title="Permalink to this definition"></a></dt>
+<dd><p>ATT + LSTM + LSTM + FC</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.classifier.get_lstm_no_attention">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.classifier.</span></span><span class="sig-name descname"><span class="pre">get_lstm_no_attention</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">units</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxlen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/classifier.html#get_lstm_no_attention"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.classifier.get_lstm_no_attention" title="Permalink to this definition"></a></dt>
+<dd><p>LSTM + LSTM + FC</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.classifier.load_weights">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.classifier.</span></span><span class="sig-name descname"><span class="pre">load_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weigths</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/classifier.html#load_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.classifier.load_weights" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.classifier.predict">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.classifier.</span></span><span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_batches</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/classifier.html#predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.classifier.predict" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.classifier.predict_from_path">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.classifier.</span></span><span class="sig-name descname"><span class="pre">predict_from_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_batches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/classifier.html#predict_from_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.classifier.predict_from_path" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.classifier.train">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.classifier.</span></span><span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_batches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_batches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patience</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./experiments/test'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/classifier.html#train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.classifier.train" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.classifier.train_step">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.classifier.</span></span><span class="sig-name descname"><span class="pre">train_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/classifier.html#train_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.classifier.train_step" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.classifier.valid_step">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.classifier.</span></span><span class="sig-name descname"><span class="pre">valid_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_pred</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/classifier.html#valid_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.classifier.valid_step" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
 <section id="module-ASTROMER.core.data">
 <span id="data"></span><h2>data<a class="headerlink" href="#module-ASTROMER.core.data" title="Permalink to this heading"></a></h2>

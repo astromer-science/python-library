@@ -16,3 +16,15 @@ This project `was published <https://arxiv.org/abs/2205.01677/>`_ by C. Donoso-O
    :caption: LIBRARY DOCUMENTATION
 
    ASTROMER
+
+
+Resources
+-----------------------------------------------
+
+- `ASTROMER Documentation <https://astromer.readthedocs.io/en/latest/>`_
+- `ASTROMER Tutorials <https://www.stellardnn.org/astromer/>`_
+
+Contributing to ASTROMER
+---------------------------------------------
+
+.. epigraph:: If you train your model from scratch, you can share your pre-trained weights by submitting a Pull Request on `the weights repository <https://github.com/astromer-science/weights>`_

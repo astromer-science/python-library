@@ -1,3 +1,9 @@
+ASTROMER
+****************************
+
+
+=============================
+
 Single-Band Encoder
 =============================
 
@@ -129,19 +135,10 @@ Fine Tune
 
 .. epigraph:: For large datasets is recommended to use Tensorflow Records `see this tutorial to execute our data pipeline <https://github.com/astromer-science/main-code/blob/main/presentation/notebooks/create_records.ipynb>`_
 
+
+
 .. toctree::
    :maxdepth: 2
    :caption: Go deep in our models
 
    ASTROMER.core
-
-Resources
------------------------------------------------
-
-- `ASTROMER Documentation <https://astromer.readthedocs.io/en/latest/>`_
-- `ASTROMER Tutorials <https://www.stellardnn.org/astromer/>`_
-
-Contributing to ASTROMER
----------------------------------------------
-
-.. epigraph:: If you train your model from scratch, you can share your pre-trained weights by submitting a Pull Request on `the weights repository <https://github.com/astromer-science/weights>`_

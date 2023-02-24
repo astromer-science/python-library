@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Single-Band Encoder &mdash; ASTROMER 0.0.6 documentation</title>
+  <title>ASTROMER &mdash; ASTROMER 0.0.6 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -26,7 +26,7 @@
   <div class="wy-grid-for-nav">
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search"  style="background: white" >
+        <div class="wy-side-nav-search"  style="background: red" >
 
           
           
@@ -43,28 +43,29 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">LIBRARY DOCUMENTATION</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Single-Band Encoder</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.encode"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.encode()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.fit"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.fit()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.from_pretraining"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.from_pretraining()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.load_weights"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.load_weights()</span></code></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ASTROMER</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#single-band-encoder">Single-Band Encoder</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.encode"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.encode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.fit"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.from_pretraining"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.from_pretraining()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.load_weights"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.load_weights()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="#module-ASTROMER.preprocessing">Preprocessing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#module-ASTROMER.utils">Utils</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#ASTROMER.utils.download_weights"><code class="docutils literal notranslate"><span class="pre">download_weights()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ASTROMER.preprocessing">Preprocessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ASTROMER.utils">Utils</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ASTROMER.utils.download_weights"><code class="docutils literal notranslate"><span class="pre">download_weights()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="#quick-start">Quick-start</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#fine-tune">Fine Tune</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ASTROMER.core.html">Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quick-start">Quick-start</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fine-tune">Fine Tune</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ASTROMER.core.html">Modules</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#resources">Resources</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#contributing-to-astromer">Contributing to ASTROMER</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -73,7 +74,7 @@
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: red" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">ASTROMER</a>
       </nav>
@@ -83,7 +84,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Single-Band Encoder</li>
+      <li class="breadcrumb-item active">ASTROMER</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/ASTROMER.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -93,8 +94,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="single-band-encoder">
-<h1>Single-Band Encoder<a class="headerlink" href="#single-band-encoder" title="Permalink to this heading"></a></h1>
+  <section id="astromer">
+<h1>ASTROMER<a class="headerlink" href="#astromer" title="Permalink to this heading"></a></h1>
+<hr class="docutils" />
+<section id="single-band-encoder">
+<h2>Single-Band Encoder<a class="headerlink" href="#single-band-encoder" title="Permalink to this heading"></a></h2>
 <blockquote class="epigraph">
 <div><p>The <strong>Single-Band Encoder</strong> represents the main class of the models, which load, fit, encode and train the preprocessed weights.</p>
 </div></blockquote>
@@ -208,10 +212,10 @@ The method first checks the format of the dataset containing the light curves.</
 
 </section>
 <section id="module-ASTROMER.preprocessing">
-<span id="preprocessing"></span><h1>Preprocessing<a class="headerlink" href="#module-ASTROMER.preprocessing" title="Permalink to this heading"></a></h1>
+<span id="preprocessing"></span><h2>Preprocessing<a class="headerlink" href="#module-ASTROMER.preprocessing" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-ASTROMER.utils">
-<span id="utils"></span><h1>Utils<a class="headerlink" href="#module-ASTROMER.utils" title="Permalink to this heading"></a></h1>
+<span id="utils"></span><h2>Utils<a class="headerlink" href="#module-ASTROMER.utils" title="Permalink to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="ASTROMER.utils.download_weights">
 <span class="sig-prename descclassname"><span class="pre">ASTROMER.utils.</span></span><span class="sig-name descname"><span class="pre">download_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/utils.html#download_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.utils.download_weights" title="Permalink to this definition"></a></dt>
@@ -230,7 +234,7 @@ The UTILS module it’s a set of functions that allow performing functions not c
 
 </section>
 <section id="quick-start">
-<h1>Quick-start<a class="headerlink" href="#quick-start" title="Permalink to this heading"></a></h1>
+<h2>Quick-start<a class="headerlink" href="#quick-start" title="Permalink to this heading"></a></h2>
 <blockquote class="epigraph">
 <div><p><strong>Install</strong></p>
 </div></blockquote>
@@ -270,7 +274,7 @@ The UTILS module it’s a set of functions that allow performing functions not c
 </pre></div>
 </div>
 <section id="fine-tune">
-<h2>Fine Tune<a class="headerlink" href="#fine-tune" title="Permalink to this heading"></a></h2>
+<h3>Fine Tune<a class="headerlink" href="#fine-tune" title="Permalink to this heading"></a></h3>
 <blockquote class="epigraph">
 <div><p><cite>ASTROMER</cite> can be easly trained by using the <cite>fit</cite>. It include</p>
 </div></blockquote>
@@ -350,18 +354,6 @@ The UTILS module it’s a set of functions that allow performing functions not c
 </ul>
 </div>
 </section>
-<section id="resources">
-<h2>Resources<a class="headerlink" href="#resources" title="Permalink to this heading"></a></h2>
-<ul class="simple">
-<li><p><a class="reference external" href="https://astromer.readthedocs.io/en/latest/">ASTROMER Documentation</a></p></li>
-<li><p><a class="reference external" href="https://www.stellardnn.org/astromer/">ASTROMER Tutorials</a></p></li>
-</ul>
-</section>
-<section id="contributing-to-astromer">
-<h2>Contributing to ASTROMER<a class="headerlink" href="#contributing-to-astromer" title="Permalink to this heading"></a></h2>
-<blockquote class="epigraph">
-<div><p>If you train your model from scratch, you can share your pre-trained weights by submitting a Pull Request on <a class="reference external" href="https://github.com/astromer-science/weights">the weights repository</a></p>
-</div></blockquote>
 </section>
 </section>
 

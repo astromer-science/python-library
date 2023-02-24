@@ -23,6 +23,4 @@ python:
       path: .
       extra_requirements:
         - docs
-    - method: pip
-      
   system_packages: true

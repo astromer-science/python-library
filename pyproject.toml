@@ -49,6 +49,10 @@ dependencies = [
   'tqdm',
   'seaborn',
   'scipy',
+  'sphinx_rtd_theme',
+  'sphinx',
+  'readthedocs-sphinx-search',
+  'sphinx-autodoc-typehints'
 ]
 requires-python = ">=3.7, <3.11"
 

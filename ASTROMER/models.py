@@ -7,6 +7,8 @@ from ASTROMER.core.astromer import get_ASTROMER, train, valid_step
 from ASTROMER.utils import download_weights
 from ASTROMER.core.data import load_numpy
 
+
+
 class SingleBandEncoder(object):
     """
         This class is a transformer-based model that process the input and generate a fixed-size representation
@@ -15,7 +17,7 @@ class SingleBandEncoder(object):
 
         The maximum number of observations remain fixed and masked, so every Z had the same length even if some
         light curves are shorter than others.
-
+    
         :param num_layer: Number of self-attention blocks or transformer layers in the encoder.
         :type num_layer: Integer
 
@@ -50,8 +52,8 @@ class SingleBandEncoder(object):
                        dropout=0.1,
                        maxlen=100,
                        batch_size=None):
-        super(SingleBandEncoder, self).__init__()
 
+        super(SingleBandEncoder, self).__init__()
         self.num_layers=num_layers
         self.d_model=d_model
         self.num_heads=num_heads

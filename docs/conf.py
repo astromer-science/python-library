@@ -21,7 +21,7 @@ release = '0.0.6'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ["sphinx_rtd_theme", "sphinx.ext.todo", "sphinx.ext.viewcode", "sphinx.ext.autodoc"]
+extensions = ["sphinx_rtd_theme", "sphinx.ext.todo", "sphinx.ext.viewcode", "sphinx.ext.autodoc", "sphinx_autodoc_typehints"]
 
 # Automatically extract typehints when specified and place them in
 # descriptions of the relevant function/method.

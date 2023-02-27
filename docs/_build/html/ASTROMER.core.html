@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modules &mdash; ASTROMER 0.0.6 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="ASTROMER" href="ASTROMER.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #cf3a23" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ASTROMER
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">LIBRARY DOCUMENTATION</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ASTROMER.html">ASTROMER</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ASTROMER.html#single-band-encoder">Single-Band Encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ASTROMER.html#module-ASTROMER.preprocessing">Preprocessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ASTROMER.html#module-ASTROMER.utils">Utils</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ASTROMER.html#quick-start">Quick-start</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="ASTROMER.html#fine-tune">Fine Tune</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Modules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #cf3a23" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ASTROMER</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="ASTROMER.html">ASTROMER</a></li>
+      <li class="breadcrumb-item active">Modules</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/ASTROMER.core.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="modules">
+<h1>Modules<a class="headerlink" href="#modules" title="Permalink to this heading"></a></h1>
+<section id="module-ASTROMER.core.astromer">
+<span id="astromer"></span><h2>astromer<a class="headerlink" href="#module-ASTROMER.core.astromer" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.astromer.get_ASTROMER">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.astromer.</span></span><span class="sig-name descname"><span class="pre">get_ASTROMER</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_heads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">256</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_leak</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxlen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/astromer.html#get_ASTROMER"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.astromer.get_ASTROMER" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.astromer.predict">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.astromer.</span></span><span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predic_proba</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/astromer.html#predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.astromer.predict" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.astromer.train">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.astromer.</span></span><span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patience</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./experiments/test'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finetuning</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_random</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_cls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/astromer.html#train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.astromer.train" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.astromer.train_step">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.astromer.</span></span><span class="sig-name descname"><span class="pre">train_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/astromer.html#train_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.astromer.train_step" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.astromer.valid_step">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.astromer.</span></span><span class="sig-name descname"><span class="pre">valid_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_pred</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/astromer.html#valid_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.astromer.valid_step" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-ASTROMER.core.attention">
+<span id="attention"></span><h2>attention<a class="headerlink" href="#module-ASTROMER.core.attention" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ASTROMER.core.attention.MultiHeadAttention">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ASTROMER.core.attention.</span></span><span class="sig-name descname"><span class="pre">MultiHeadAttention</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/attention.html#MultiHeadAttention"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.attention.MultiHeadAttention" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ASTROMER.core.attention.MultiHeadAttention.call">
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/attention.html#MultiHeadAttention.call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.attention.MultiHeadAttention.call" title="Permalink to this definition"></a></dt>
+<dd><p>This is where the layer’s logic lives.</p>
+<p>The <cite>call()</cite> method may not create state (except in its first
+invocation, wrapping the creation of variables or other resources in
+<cite>tf.init_scope()</cite>).  It is recommended to create state, including
+<cite>tf.Variable</cite> instances and nested <cite>Layer</cite> instances,</p>
+<blockquote>
+<div><p>in <cite>__init__()</cite>, or in the <cite>build()</cite> method that is</p>
+</div></blockquote>
+<p>called automatically before <cite>call()</cite> executes for the first time.</p>
+<dl>
+<dt>Args:</dt><dd><dl>
+<dt>inputs: Input tensor, or dict/list/tuple of input tensors.</dt><dd><p>The first positional <cite>inputs</cite> argument is subject to special rules:
+- <cite>inputs</cite> must be explicitly passed. A layer cannot have zero</p>
+<blockquote>
+<div><p>arguments, and <cite>inputs</cite> cannot be provided via the default value
+of a keyword argument.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>NumPy array or Python scalar values in <cite>inputs</cite> get cast as
+tensors.</p></li>
+<li><p>Keras mask metadata is only collected from <cite>inputs</cite>.</p></li>
+<li><p>Layers are built (<cite>build(input_shape)</cite> method)
+using shape info from <cite>inputs</cite> only.</p></li>
+<li><p><cite>input_spec</cite> compatibility is only checked against <cite>inputs</cite>.</p></li>
+<li><p>Mixed precision input casting is only applied to <cite>inputs</cite>.
+If a layer has tensor arguments in <cite>*args</cite> or <cite>**kwargs</cite>, their
+casting behavior in mixed precision should be handled manually.</p></li>
+<li><p>The SavedModel input specification is generated using <cite>inputs</cite>
+only.</p></li>
+<li><p>Integration with various ecosystem packages like TFMOT, TFLite,
+TF.js, etc is only supported for <cite>inputs</cite> and not for tensors in
+positional and keyword arguments.</p></li>
+</ul>
+</dd>
+<dt><a href="#id1"><span class="problematic" id="id2">*</span></a>args: Additional positional arguments. May contain tensors, although</dt><dd><p>this is not recommended, for the reasons above.</p>
+</dd>
+<dt><a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs: Additional keyword arguments. May contain tensors, although</dt><dd><p>this is not recommended, for the reasons above.
+The following optional keyword arguments are reserved:
+- <cite>training</cite>: Boolean scalar tensor of Python boolean indicating</p>
+<blockquote>
+<div><p>whether the <cite>call</cite> is meant for training or inference.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><cite>mask</cite>: Boolean input mask. If the layer’s <cite>call()</cite> method takes a
+<cite>mask</cite> argument, its default value will be set to the mask
+generated for <cite>inputs</cite> by the previous layer (if <cite>input</cite> did come
+from a layer that generated a corresponding mask, i.e. if it came
+from a Keras layer with masking support).</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A tensor or list/tuple of tensors.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ASTROMER.core.attention.MultiHeadAttention.split_heads">
+<span class="sig-name descname"><span class="pre">split_heads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'qkv'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/attention.html#MultiHeadAttention.split_heads"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.attention.MultiHeadAttention.split_heads" title="Permalink to this definition"></a></dt>
+<dd><p>Split the last dimension into (num_heads, depth).
+Transpose the result such that the shape is (batch_size, num_heads, seq_len, depth)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.attention.scaled_dot_product_attention">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.attention.</span></span><span class="sig-name descname"><span class="pre">scaled_dot_product_attention</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/attention.html#scaled_dot_product_attention"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.attention.scaled_dot_product_attention" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate the attention weights.
+q, k, v must have matching leading dimensions.
+k, v must have matching penultimate dimension, i.e.: seq_len_k = seq_len_v.
+The mask has different shapes depending on its type(padding or look ahead)
+but it must be broadcastable for addition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q</strong> – query shape == (…, seq_len_q, depth)</p></li>
+<li><p><strong>k</strong> – key shape == (…, seq_len_k, depth)</p></li>
+<li><p><strong>v</strong> – value shape == (…, seq_len_v, depth_v)</p></li>
+<li><p><strong>mask</strong> – Float tensor with shape broadcastable to (…, seq_len_q, seq_len_k). Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>output, attention_weights</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-ASTROMER.core.classifier">
+<span id="classifier"></span><h2>classifier<a class="headerlink" href="#module-ASTROMER.core.classifier" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.classifier.get_conf">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.classifier.</span></span><span class="sig-name descname"><span class="pre">get_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/classifier.html#get_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.classifier.get_conf" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.classifier.get_fc_attention">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.classifier.</span></span><span class="sig-name descname"><span class="pre">get_fc_attention</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">units</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weigths</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/classifier.html#get_fc_attention"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.classifier.get_fc_attention" title="Permalink to this definition"></a></dt>
+<dd><p>FC + ATT</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.classifier.get_lstm_attention">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.classifier.</span></span><span class="sig-name descname"><span class="pre">get_lstm_attention</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">units</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weigths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/classifier.html#get_lstm_attention"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.classifier.get_lstm_attention" title="Permalink to this definition"></a></dt>
+<dd><p>ATT + LSTM + LSTM + FC</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.classifier.get_lstm_no_attention">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.classifier.</span></span><span class="sig-name descname"><span class="pre">get_lstm_no_attention</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">units</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxlen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/classifier.html#get_lstm_no_attention"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.classifier.get_lstm_no_attention" title="Permalink to this definition"></a></dt>
+<dd><p>LSTM + LSTM + FC</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.classifier.load_weights">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.classifier.</span></span><span class="sig-name descname"><span class="pre">load_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weigths</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/classifier.html#load_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.classifier.load_weights" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.classifier.predict">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.classifier.</span></span><span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_batches</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/classifier.html#predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.classifier.predict" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.classifier.predict_from_path">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.classifier.</span></span><span class="sig-name descname"><span class="pre">predict_from_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_batches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/classifier.html#predict_from_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.classifier.predict_from_path" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.classifier.train">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.classifier.</span></span><span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_batches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_batches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patience</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./experiments/test'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/classifier.html#train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.classifier.train" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.classifier.train_step">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.classifier.</span></span><span class="sig-name descname"><span class="pre">train_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/classifier.html#train_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.classifier.train_step" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.classifier.valid_step">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.classifier.</span></span><span class="sig-name descname"><span class="pre">valid_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_pred</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/classifier.html#valid_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.classifier.valid_step" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-ASTROMER.core.data">
+<span id="data"></span><h2>data<a class="headerlink" href="#module-ASTROMER.core.data" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.data.adjust_fn">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.data.</span></span><span class="sig-name descname"><span class="pre">adjust_fn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/data.html#adjust_fn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.data.adjust_fn" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.data.adjust_fn_clf">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.data.</span></span><span class="sig-name descname"><span class="pre">adjust_fn_clf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_obs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/data.html#adjust_fn_clf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.data.adjust_fn_clf" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.data.create_dataset">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.data.</span></span><span class="sig-name descname"><span class="pre">create_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'data/raw_data/macho/MACHO/LCs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'data/records/macho/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsets_frac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.5,</span> <span class="pre">0.25)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_subset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_lcs_per_record</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/data.html#create_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.data.create_dataset" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.data.create_generator">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.data.</span></span><span class="sig-name descname"><span class="pre">create_generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_arrays</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/data.html#create_generator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.data.create_generator" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.data.deserialize">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.data.</span></span><span class="sig-name descname"><span class="pre">deserialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/data.html#deserialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.data.deserialize" title="Permalink to this definition"></a></dt>
+<dd><p>Read a serialized sample and convert it to tensor
+Context and sequence features should match with the name used when writing.
+Args:</p>
+<blockquote>
+<div><p>sample (binary): serialized sample</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>type: decoded sample</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.data.divide_training_subset">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.data.</span></span><span class="sig-name descname"><span class="pre">divide_training_subset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/data.html#divide_training_subset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.data.divide_training_subset" title="Permalink to this definition"></a></dt>
+<dd><p>Divide the dataset into train, validation and test subsets.
+Notice that:</p>
+<blockquote>
+<div><p>test = 1 - (train + val)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Args:</dt><dd><p>frame (Dataframe): Dataframe following the astro-standard format
+dest (string): Record destination.
+train (float): train fraction
+val (float): validation fraction</p>
+</dd>
+<dt>Returns:</dt><dd><p>tuple x3 : (name of subset, subframe with metadata)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.data.format_label">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.data.</span></span><span class="sig-name descname"><span class="pre">format_label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_cls</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/data.html#format_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.data.format_label" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.data.get_example">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.data.</span></span><span class="sig-name descname"><span class="pre">get_example</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lcid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lightcurve</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/data.html#get_example"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.data.get_example" title="Permalink to this definition"></a></dt>
+<dd><p>Create a record example from numpy values.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>lcid (string): object id
+label (int): class code
+lightcurve (numpy array): time, magnitudes and observational error</p>
+</dd>
+<dt>Returns:</dt><dd><p>tensorflow record</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.data.get_window">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.data.</span></span><span class="sig-name descname"><span class="pre">get_window</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pivot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_obs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/data.html#get_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.data.get_window" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.data.get_windows">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.data.</span></span><span class="sig-name descname"><span class="pre">get_windows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_obs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deserialize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/data.html#get_windows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.data.get_windows" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.data.load_numpy">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.data.</span></span><span class="sig-name descname"><span class="pre">load_numpy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shuffle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_obs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msk_frac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rnd_frac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_frac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/data.html#load_numpy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.data.load_numpy" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.data.mask_sample">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.data.</span></span><span class="sig-name descname"><span class="pre">mask_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msk_prob</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rnd_prob</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_prob</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_obs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/data.html#mask_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.data.mask_sample" title="Permalink to this definition"></a></dt>
+<dd><p>Pretraining formater</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.data.pretraining_records">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.data.</span></span><span class="sig-name descname"><span class="pre">pretraining_records</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_obs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msk_frac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rnd_frac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_frac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shuffle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/data.html#pretraining_records"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.data.pretraining_records" title="Permalink to this definition"></a></dt>
+<dd><p>Pretraining data loader.
+This method build the ASTROMER input format.
+ASTROMER format is based on the BERT masking strategy.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>source (string): Record folder
+batch_size (int): Batch size
+no_shuffle (bool): Do not shuffle training and validation dataset
+max_obs (int): Max. number of observation per serie
+msk_frac (float): fraction of values to be predicted ([MASK])
+rnd_frac (float): fraction of [MASKED] values to replace with random values
+same_frac (float): fraction of [MASKED] values to replace with true values</p>
+</dd>
+<dt>Returns:</dt><dd><p>Tensorflow Dataset: Iterator withg preprocessed batches</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.data.process_lc3">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.data.</span></span><span class="sig-name descname"><span class="pre">process_lc3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lc_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numpy_lc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/data.html#process_lc3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.data.process_lc3" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.data.sample_lc">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.data.</span></span><span class="sig-name descname"><span class="pre">sample_lc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_obs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deserialize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/data.html#sample_lc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.data.sample_lc" title="Permalink to this definition"></a></dt>
+<dd><p>Sample a random window of “max_obs” observations from the input sequence</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.data.write_records">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.data.</span></span><span class="sig-name descname"><span class="pre">write_records</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_lcs_per_record</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_obs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/data.html#write_records"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.data.write_records" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-ASTROMER.core.encoder">
+<span id="encoder"></span><h2>encoder<a class="headerlink" href="#module-ASTROMER.core.encoder" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ASTROMER.core.encoder.Encoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ASTROMER.core.encoder.</span></span><span class="sig-name descname"><span class="pre">Encoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/encoder.html#Encoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.encoder.Encoder" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ASTROMER.core.encoder.Encoder.call">
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/encoder.html#Encoder.call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.encoder.Encoder.call" title="Permalink to this definition"></a></dt>
+<dd><p>This is where the layer’s logic lives.</p>
+<p>The <cite>call()</cite> method may not create state (except in its first
+invocation, wrapping the creation of variables or other resources in
+<cite>tf.init_scope()</cite>).  It is recommended to create state, including
+<cite>tf.Variable</cite> instances and nested <cite>Layer</cite> instances,</p>
+<blockquote>
+<div><p>in <cite>__init__()</cite>, or in the <cite>build()</cite> method that is</p>
+</div></blockquote>
+<p>called automatically before <cite>call()</cite> executes for the first time.</p>
+<dl>
+<dt>Args:</dt><dd><dl>
+<dt>inputs: Input tensor, or dict/list/tuple of input tensors.</dt><dd><p>The first positional <cite>inputs</cite> argument is subject to special rules:
+- <cite>inputs</cite> must be explicitly passed. A layer cannot have zero</p>
+<blockquote>
+<div><p>arguments, and <cite>inputs</cite> cannot be provided via the default value
+of a keyword argument.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>NumPy array or Python scalar values in <cite>inputs</cite> get cast as
+tensors.</p></li>
+<li><p>Keras mask metadata is only collected from <cite>inputs</cite>.</p></li>
+<li><p>Layers are built (<cite>build(input_shape)</cite> method)
+using shape info from <cite>inputs</cite> only.</p></li>
+<li><p><cite>input_spec</cite> compatibility is only checked against <cite>inputs</cite>.</p></li>
+<li><p>Mixed precision input casting is only applied to <cite>inputs</cite>.
+If a layer has tensor arguments in <cite>*args</cite> or <cite>**kwargs</cite>, their
+casting behavior in mixed precision should be handled manually.</p></li>
+<li><p>The SavedModel input specification is generated using <cite>inputs</cite>
+only.</p></li>
+<li><p>Integration with various ecosystem packages like TFMOT, TFLite,
+TF.js, etc is only supported for <cite>inputs</cite> and not for tensors in
+positional and keyword arguments.</p></li>
+</ul>
+</dd>
+<dt><a href="#id5"><span class="problematic" id="id6">*</span></a>args: Additional positional arguments. May contain tensors, although</dt><dd><p>this is not recommended, for the reasons above.</p>
+</dd>
+<dt><a href="#id7"><span class="problematic" id="id8">**</span></a>kwargs: Additional keyword arguments. May contain tensors, although</dt><dd><p>this is not recommended, for the reasons above.
+The following optional keyword arguments are reserved:
+- <cite>training</cite>: Boolean scalar tensor of Python boolean indicating</p>
+<blockquote>
+<div><p>whether the <cite>call</cite> is meant for training or inference.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><cite>mask</cite>: Boolean input mask. If the layer’s <cite>call()</cite> method takes a
+<cite>mask</cite> argument, its default value will be set to the mask
+generated for <cite>inputs</cite> by the previous layer (if <cite>input</cite> did come
+from a layer that generated a corresponding mask, i.e. if it came
+from a Keras layer with masking support).</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A tensor or list/tuple of tensors.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ASTROMER.core.encoder.EncoderLayer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ASTROMER.core.encoder.</span></span><span class="sig-name descname"><span class="pre">EncoderLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/encoder.html#EncoderLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.encoder.EncoderLayer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ASTROMER.core.encoder.EncoderLayer.call">
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/encoder.html#EncoderLayer.call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.encoder.EncoderLayer.call" title="Permalink to this definition"></a></dt>
+<dd><p>This is where the layer’s logic lives.</p>
+<p>The <cite>call()</cite> method may not create state (except in its first
+invocation, wrapping the creation of variables or other resources in
+<cite>tf.init_scope()</cite>).  It is recommended to create state, including
+<cite>tf.Variable</cite> instances and nested <cite>Layer</cite> instances,</p>
+<blockquote>
+<div><p>in <cite>__init__()</cite>, or in the <cite>build()</cite> method that is</p>
+</div></blockquote>
+<p>called automatically before <cite>call()</cite> executes for the first time.</p>
+<dl>
+<dt>Args:</dt><dd><dl>
+<dt>inputs: Input tensor, or dict/list/tuple of input tensors.</dt><dd><p>The first positional <cite>inputs</cite> argument is subject to special rules:
+- <cite>inputs</cite> must be explicitly passed. A layer cannot have zero</p>
+<blockquote>
+<div><p>arguments, and <cite>inputs</cite> cannot be provided via the default value
+of a keyword argument.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>NumPy array or Python scalar values in <cite>inputs</cite> get cast as
+tensors.</p></li>
+<li><p>Keras mask metadata is only collected from <cite>inputs</cite>.</p></li>
+<li><p>Layers are built (<cite>build(input_shape)</cite> method)
+using shape info from <cite>inputs</cite> only.</p></li>
+<li><p><cite>input_spec</cite> compatibility is only checked against <cite>inputs</cite>.</p></li>
+<li><p>Mixed precision input casting is only applied to <cite>inputs</cite>.
+If a layer has tensor arguments in <cite>*args</cite> or <cite>**kwargs</cite>, their
+casting behavior in mixed precision should be handled manually.</p></li>
+<li><p>The SavedModel input specification is generated using <cite>inputs</cite>
+only.</p></li>
+<li><p>Integration with various ecosystem packages like TFMOT, TFLite,
+TF.js, etc is only supported for <cite>inputs</cite> and not for tensors in
+positional and keyword arguments.</p></li>
+</ul>
+</dd>
+<dt><a href="#id9"><span class="problematic" id="id10">*</span></a>args: Additional positional arguments. May contain tensors, although</dt><dd><p>this is not recommended, for the reasons above.</p>
+</dd>
+<dt><a href="#id11"><span class="problematic" id="id12">**</span></a>kwargs: Additional keyword arguments. May contain tensors, although</dt><dd><p>this is not recommended, for the reasons above.
+The following optional keyword arguments are reserved:
+- <cite>training</cite>: Boolean scalar tensor of Python boolean indicating</p>
+<blockquote>
+<div><p>whether the <cite>call</cite> is meant for training or inference.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><cite>mask</cite>: Boolean input mask. If the layer’s <cite>call()</cite> method takes a
+<cite>mask</cite> argument, its default value will be set to the mask
+generated for <cite>inputs</cite> by the previous layer (if <cite>input</cite> did come
+from a layer that generated a corresponding mask, i.e. if it came
+from a Keras layer with masking support).</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A tensor or list/tuple of tensors.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.encoder.point_wise_feed_forward_network">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.encoder.</span></span><span class="sig-name descname"><span class="pre">point_wise_feed_forward_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dff</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/encoder.html#point_wise_feed_forward_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.encoder.point_wise_feed_forward_network" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-ASTROMER.core.losses">
+<span id="losses"></span><h2>losses<a class="headerlink" href="#module-ASTROMER.core.losses" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.losses.custom_bce">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.losses.</span></span><span class="sig-name descname"><span class="pre">custom_bce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/losses.html#custom_bce"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.losses.custom_bce" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.losses.custom_rmse">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.losses.</span></span><span class="sig-name descname"><span class="pre">custom_rmse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/losses.html#custom_rmse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.losses.custom_rmse" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-ASTROMER.core.masking">
+<span id="masking"></span><h2>masking<a class="headerlink" href="#module-ASTROMER.core.masking" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.masking.create_look_ahead_mask">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.masking.</span></span><span class="sig-name descname"><span class="pre">create_look_ahead_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/masking.html#create_look_ahead_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.masking.create_look_ahead_mask" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.masking.get_masked">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.masking.</span></span><span class="sig-name descname"><span class="pre">get_masked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/masking.html#get_masked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.masking.get_masked" title="Permalink to this definition"></a></dt>
+<dd><p>Add [MASK] values to be predicted
+Args:</p>
+<blockquote>
+<div><p>tensor : tensor values
+frac (float, optional): percentage for masking [MASK]</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>binary tensor: a time-distributed mask</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.masking.get_padding_mask">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.masking.</span></span><span class="sig-name descname"><span class="pre">get_padding_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lengths</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/masking.html#get_padding_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.masking.get_padding_mask" title="Permalink to this definition"></a></dt>
+<dd><p>Create mask given a tensor and true length</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.masking.reshape_mask">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.masking.</span></span><span class="sig-name descname"><span class="pre">reshape_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mask</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/masking.html#reshape_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.masking.reshape_mask" title="Permalink to this definition"></a></dt>
+<dd><p>Reshape Mask to match attention dimensionality</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.masking.set_random">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.masking.</span></span><span class="sig-name descname"><span class="pre">set_random</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">serie_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">serie_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rnd_frac</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'set_random'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/masking.html#set_random"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.masking.set_random" title="Permalink to this definition"></a></dt>
+<dd><p>Add Random values in serie_1
+Note that if serie_2 == serie_1 then it replaces the true value
+Args:</p>
+<blockquote>
+<div><p>serie_1: current serie
+mask_1 : mask containing the [MASKED]-indices from serie_1
+serie_2: random values to be placed within serie_1
+rnd_frac (float): fraction of [MASKED] to be replaced by random</p>
+<blockquote>
+<div><p>elements from serie_2</p>
+</div></blockquote>
+</div></blockquote>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>serie_1: serie_1 with random values</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-ASTROMER.core.metrics">
+<span id="metrics"></span><h2>metrics<a class="headerlink" href="#module-ASTROMER.core.metrics" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.metrics.custom_acc">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.metrics.</span></span><span class="sig-name descname"><span class="pre">custom_acc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/metrics.html#custom_acc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.metrics.custom_acc" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-ASTROMER.core.output">
+<span id="output"></span><h2>output<a class="headerlink" href="#module-ASTROMER.core.output" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ASTROMER.core.output.RegLayer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ASTROMER.core.output.</span></span><span class="sig-name descname"><span class="pre">RegLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/output.html#RegLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.output.RegLayer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ASTROMER.core.output.RegLayer.call">
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/output.html#RegLayer.call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.output.RegLayer.call" title="Permalink to this definition"></a></dt>
+<dd><p>This is where the layer’s logic lives.</p>
+<p>The <cite>call()</cite> method may not create state (except in its first
+invocation, wrapping the creation of variables or other resources in
+<cite>tf.init_scope()</cite>).  It is recommended to create state, including
+<cite>tf.Variable</cite> instances and nested <cite>Layer</cite> instances,</p>
+<blockquote>
+<div><p>in <cite>__init__()</cite>, or in the <cite>build()</cite> method that is</p>
+</div></blockquote>
+<p>called automatically before <cite>call()</cite> executes for the first time.</p>
+<dl>
+<dt>Args:</dt><dd><dl>
+<dt>inputs: Input tensor, or dict/list/tuple of input tensors.</dt><dd><p>The first positional <cite>inputs</cite> argument is subject to special rules:
+- <cite>inputs</cite> must be explicitly passed. A layer cannot have zero</p>
+<blockquote>
+<div><p>arguments, and <cite>inputs</cite> cannot be provided via the default value
+of a keyword argument.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>NumPy array or Python scalar values in <cite>inputs</cite> get cast as
+tensors.</p></li>
+<li><p>Keras mask metadata is only collected from <cite>inputs</cite>.</p></li>
+<li><p>Layers are built (<cite>build(input_shape)</cite> method)
+using shape info from <cite>inputs</cite> only.</p></li>
+<li><p><cite>input_spec</cite> compatibility is only checked against <cite>inputs</cite>.</p></li>
+<li><p>Mixed precision input casting is only applied to <cite>inputs</cite>.
+If a layer has tensor arguments in <cite>*args</cite> or <cite>**kwargs</cite>, their
+casting behavior in mixed precision should be handled manually.</p></li>
+<li><p>The SavedModel input specification is generated using <cite>inputs</cite>
+only.</p></li>
+<li><p>Integration with various ecosystem packages like TFMOT, TFLite,
+TF.js, etc is only supported for <cite>inputs</cite> and not for tensors in
+positional and keyword arguments.</p></li>
+</ul>
+</dd>
+<dt><a href="#id13"><span class="problematic" id="id14">*</span></a>args: Additional positional arguments. May contain tensors, although</dt><dd><p>this is not recommended, for the reasons above.</p>
+</dd>
+<dt><a href="#id15"><span class="problematic" id="id16">**</span></a>kwargs: Additional keyword arguments. May contain tensors, although</dt><dd><p>this is not recommended, for the reasons above.
+The following optional keyword arguments are reserved:
+- <cite>training</cite>: Boolean scalar tensor of Python boolean indicating</p>
+<blockquote>
+<div><p>whether the <cite>call</cite> is meant for training or inference.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><cite>mask</cite>: Boolean input mask. If the layer’s <cite>call()</cite> method takes a
+<cite>mask</cite> argument, its default value will be set to the mask
+generated for <cite>inputs</cite> by the previous layer (if <cite>input</cite> did come
+from a layer that generated a corresponding mask, i.e. if it came
+from a Keras layer with masking support).</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A tensor or list/tuple of tensors.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ASTROMER.core.output.SauceLayer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ASTROMER.core.output.</span></span><span class="sig-name descname"><span class="pre">SauceLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/output.html#SauceLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.output.SauceLayer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ASTROMER.core.output.SauceLayer.build">
+<span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/output.html#SauceLayer.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.output.SauceLayer.build" title="Permalink to this definition"></a></dt>
+<dd><p>Creates the variables of the layer (optional, for subclass implementers).</p>
+<p>This is a method that implementers of subclasses of <cite>Layer</cite> or <cite>Model</cite>
+can override if they need a state-creation step in-between
+layer instantiation and layer call. It is invoked automatically before
+the first execution of <cite>call()</cite>.</p>
+<p>This is typically used to create the weights of <cite>Layer</cite> subclasses
+(at the discretion of the subclass implementer).</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>input_shape: Instance of <cite>TensorShape</cite>, or list of instances of</dt><dd><p><cite>TensorShape</cite> if the layer expects a list of inputs
+(one instance per input).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ASTROMER.core.output.SauceLayer.call">
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/output.html#SauceLayer.call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.output.SauceLayer.call" title="Permalink to this definition"></a></dt>
+<dd><p>This is where the layer’s logic lives.</p>
+<p>The <cite>call()</cite> method may not create state (except in its first
+invocation, wrapping the creation of variables or other resources in
+<cite>tf.init_scope()</cite>).  It is recommended to create state, including
+<cite>tf.Variable</cite> instances and nested <cite>Layer</cite> instances,</p>
+<blockquote>
+<div><p>in <cite>__init__()</cite>, or in the <cite>build()</cite> method that is</p>
+</div></blockquote>
+<p>called automatically before <cite>call()</cite> executes for the first time.</p>
+<dl>
+<dt>Args:</dt><dd><dl>
+<dt>inputs: Input tensor, or dict/list/tuple of input tensors.</dt><dd><p>The first positional <cite>inputs</cite> argument is subject to special rules:
+- <cite>inputs</cite> must be explicitly passed. A layer cannot have zero</p>
+<blockquote>
+<div><p>arguments, and <cite>inputs</cite> cannot be provided via the default value
+of a keyword argument.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>NumPy array or Python scalar values in <cite>inputs</cite> get cast as
+tensors.</p></li>
+<li><p>Keras mask metadata is only collected from <cite>inputs</cite>.</p></li>
+<li><p>Layers are built (<cite>build(input_shape)</cite> method)
+using shape info from <cite>inputs</cite> only.</p></li>
+<li><p><cite>input_spec</cite> compatibility is only checked against <cite>inputs</cite>.</p></li>
+<li><p>Mixed precision input casting is only applied to <cite>inputs</cite>.
+If a layer has tensor arguments in <cite>*args</cite> or <cite>**kwargs</cite>, their
+casting behavior in mixed precision should be handled manually.</p></li>
+<li><p>The SavedModel input specification is generated using <cite>inputs</cite>
+only.</p></li>
+<li><p>Integration with various ecosystem packages like TFMOT, TFLite,
+TF.js, etc is only supported for <cite>inputs</cite> and not for tensors in
+positional and keyword arguments.</p></li>
+</ul>
+</dd>
+<dt><a href="#id17"><span class="problematic" id="id18">*</span></a>args: Additional positional arguments. May contain tensors, although</dt><dd><p>this is not recommended, for the reasons above.</p>
+</dd>
+<dt><a href="#id19"><span class="problematic" id="id20">**</span></a>kwargs: Additional keyword arguments. May contain tensors, although</dt><dd><p>this is not recommended, for the reasons above.
+The following optional keyword arguments are reserved:
+- <cite>training</cite>: Boolean scalar tensor of Python boolean indicating</p>
+<blockquote>
+<div><p>whether the <cite>call</cite> is meant for training or inference.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><cite>mask</cite>: Boolean input mask. If the layer’s <cite>call()</cite> method takes a
+<cite>mask</cite> argument, its default value will be set to the mask
+generated for <cite>inputs</cite> by the previous layer (if <cite>input</cite> did come
+from a layer that generated a corresponding mask, i.e. if it came
+from a Keras layer with masking support).</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A tensor or list/tuple of tensors.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ASTROMER.core.output.SauceLayer.init">
+<span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/output.html#SauceLayer.init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.output.SauceLayer.init" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-ASTROMER.core.plots">
+<span id="plots"></span><h2>plots<a class="headerlink" href="#module-ASTROMER.core.plots" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.plots.plot_cm">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.plots.</span></span><span class="sig-name descname"><span class="pre">plot_cm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CM'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fontsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yticklabels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/plots.html#plot_cm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.plots.plot_cm" title="Permalink to this definition"></a></dt>
+<dd><p>Plot Confusion Matrix</p>
+</dd></dl>
+
+</section>
+<section id="module-ASTROMER.core.positional">
+<span id="positional"></span><h2>positional<a class="headerlink" href="#module-ASTROMER.core.positional" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.positional.get_angles">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.positional.</span></span><span class="sig-name descname"><span class="pre">get_angles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">times</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/positional.html#get_angles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.positional.get_angles" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.positional.get_angles_original">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.positional.</span></span><span class="sig-name descname"><span class="pre">get_angles_original</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">times</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/positional.html#get_angles_original"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.positional.get_angles_original" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.positional.positional_encoding">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.positional.</span></span><span class="sig-name descname"><span class="pre">positional_encoding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">times</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mjd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/positional.html#positional_encoding"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.positional.positional_encoding" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-ASTROMER.core.scheduler">
+<span id="scheduler"></span><h2>scheduler<a class="headerlink" href="#module-ASTROMER.core.scheduler" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ASTROMER.core.scheduler.CustomSchedule">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ASTROMER.core.scheduler.</span></span><span class="sig-name descname"><span class="pre">CustomSchedule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warmup_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/scheduler.html#CustomSchedule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.scheduler.CustomSchedule" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">LearningRateSchedule</span></code></p>
+</dd></dl>
+
+</section>
+<section id="module-ASTROMER.core.tboard">
+<span id="tboard"></span><h2>tboard<a class="headerlink" href="#module-ASTROMER.core.tboard" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.tboard.draw_graph">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.tboard.</span></span><span class="sig-name descname"><span class="pre">draw_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/tboard.html#draw_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.tboard.draw_graph" title="Permalink to this definition"></a></dt>
+<dd><p>Decorator that reports store fn graph.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.tboard.save_scalar">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.tboard.</span></span><span class="sig-name descname"><span class="pre">save_scalar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">writer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/tboard.html#save_scalar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.tboard.save_scalar" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-ASTROMER.core.utils">
+<span id="utils"></span><h2>utils<a class="headerlink" href="#module-ASTROMER.core.utils" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.utils.get_folder_name">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.utils.</span></span><span class="sig-name descname"><span class="pre">get_folder_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/utils.html#get_folder_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.utils.get_folder_name" title="Permalink to this definition"></a></dt>
+<dd><p>Look at the current path and change the name of the experiment
+if it is repeated</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path (string): folder path
+prefix (string): prefix to add</p>
+</dd>
+<dt>Returns:</dt><dd><p>string: unique path to save the experiment</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.utils.get_metrics">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.utils.</span></span><span class="sig-name descname"><span class="pre">get_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_logs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'epoch_loss'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/utils.html#get_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.utils.get_metrics" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.utils.my_summary_iterator">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.utils.</span></span><span class="sig-name descname"><span class="pre">my_summary_iterator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/utils.html#my_summary_iterator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.utils.my_summary_iterator" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.core.utils.standardize">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.core.utils.</span></span><span class="sig-name descname"><span class="pre">standardize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_mean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/core/utils.html#standardize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.core.utils.standardize" title="Permalink to this definition"></a></dt>
+<dd><p>Standardize a tensor subtracting the mean</p>
+<dl>
+<dt>Args:</dt><dd><p>tensor (1-dim tensorflow tensor): values
+axis (int): axis on which we calculate the mean
+return_mean (bool): output the mean of the tensor</p>
+<blockquote>
+<div><p>turning on the original scale</p>
+</div></blockquote>
+</dd>
+<dt>Returns:</dt><dd><p>tensor (1-dim tensorflow tensor): standardize tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ASTROMER.html" class="btn btn-neutral float-left" title="ASTROMER" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Simon Salazar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

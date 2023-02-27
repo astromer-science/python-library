@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASTROMER.core.data &mdash; ASTROMER 0.0.6 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASTROMER
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">LIBRARY DOCUMENTATION</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../ASTROMER.html">ASTROMER MODELS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ASTROMER.html#module-ASTROMER.preprocessing">Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ASTROMER.html#module-ASTROMER.utils">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ASTROMER.html#quick-start">Quick-start</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASTROMER</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ASTROMER.core.data</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ASTROMER.core.data</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">ASTROMER.core.masking</span> <span class="kn">import</span> <span class="n">get_masked</span><span class="p">,</span> <span class="n">set_random</span><span class="p">,</span> <span class="n">get_padding_mask</span>
+<span class="kn">from</span> <span class="nn">ASTROMER.core.utils</span> <span class="kn">import</span> <span class="n">standardize</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">wrap_non_picklable_objects</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;tensorflow&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>  <span class="c1"># suppress warnings</span>
+
+<span class="k">def</span> <span class="nf">_bytes_feature</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a bytes_list from a string / byte.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">0</span><span class="p">))):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span> <span class="c1"># BytesList won&#39;t unpack a string from an EagerTensor.</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Feature</span><span class="p">(</span><span class="n">bytes_list</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">BytesList</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="n">value</span><span class="p">]))</span>
+
+<span class="k">def</span> <span class="nf">_float_feature</span><span class="p">(</span><span class="n">list_of_floats</span><span class="p">):</span>  <span class="c1"># float32</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Feature</span><span class="p">(</span><span class="n">float_list</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">FloatList</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">list_of_floats</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">_int64_feature</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Feature</span><span class="p">(</span><span class="n">int64_list</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Int64List</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="n">value</span><span class="p">]))</span>
+
+<div class="viewcode-block" id="get_example"><a class="viewcode-back" href="../../../ASTROMER.core.html#ASTROMER.core.data.get_example">[docs]</a><span class="k">def</span> <span class="nf">get_example</span><span class="p">(</span><span class="n">lcid</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">lightcurve</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a record example from numpy values.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        lcid (string): object id</span>
+<span class="sd">        label (int): class code</span>
+<span class="sd">        lightcurve (numpy array): time, magnitudes and observational error</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tensorflow record</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="n">dict_features</span><span class="o">=</span><span class="p">{</span>
+    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Feature</span><span class="p">(</span><span class="n">bytes_list</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">BytesList</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">lcid</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">()])),</span>
+    <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Feature</span><span class="p">(</span><span class="n">int64_list</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Int64List</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="n">label</span><span class="p">])),</span>
+    <span class="s1">&#39;length&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Feature</span><span class="p">(</span><span class="n">int64_list</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Int64List</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="n">lightcurve</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]])),</span>
+    <span class="p">}</span>
+    <span class="n">element_context</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Features</span><span class="p">(</span><span class="n">feature</span> <span class="o">=</span> <span class="n">dict_features</span><span class="p">)</span>
+
+    <span class="n">dict_sequence</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">lightcurve</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">seqfeat</span> <span class="o">=</span> <span class="n">_float_feature</span><span class="p">(</span><span class="n">lightcurve</span><span class="p">[:,</span> <span class="n">col</span><span class="p">])</span>
+        <span class="n">seqfeat</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">FeatureList</span><span class="p">(</span><span class="n">feature</span> <span class="o">=</span> <span class="p">[</span><span class="n">seqfeat</span><span class="p">])</span>
+        <span class="n">dict_sequence</span><span class="p">[</span><span class="s1">&#39;dim_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">col</span><span class="p">)]</span> <span class="o">=</span> <span class="n">seqfeat</span>
+
+    <span class="n">element_lists</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">FeatureLists</span><span class="p">(</span><span class="n">feature_list</span><span class="o">=</span><span class="n">dict_sequence</span><span class="p">)</span>
+    <span class="n">ex</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">SequenceExample</span><span class="p">(</span><span class="n">context</span> <span class="o">=</span> <span class="n">element_context</span><span class="p">,</span>
+                                  <span class="n">feature_lists</span><span class="o">=</span> <span class="n">element_lists</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ex</span></div>
+
+<div class="viewcode-block" id="divide_training_subset"><a class="viewcode-back" href="../../../ASTROMER.core.html#ASTROMER.core.data.divide_training_subset">[docs]</a><span class="k">def</span> <span class="nf">divide_training_subset</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">test_meta</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Divide the dataset into train, validation and test subsets.</span>
+<span class="sd">    Notice that:</span>
+<span class="sd">        test = 1 - (train + val)</span>
+<span class="sd">    Args:</span>
+<span class="sd">        frame (Dataframe): Dataframe following the astro-standard format</span>
+<span class="sd">        dest (string): Record destination.</span>
+<span class="sd">        train (float): train fraction</span>
+<span class="sd">        val (float): validation fraction</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple x3 : (name of subset, subframe with metadata)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">n_samples</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">n_train</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_samples</span><span class="o">*</span><span class="n">train</span><span class="p">)</span>
+    <span class="n">n_val</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_samples</span><span class="o">*</span><span class="n">val</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">test_meta</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">sub_test</span> <span class="o">=</span> <span class="n">test_meta</span>
+        <span class="n">sub_train</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="n">n_train</span><span class="p">]</span>
+        <span class="n">sub_val</span>   <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">n_train</span><span class="p">:]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sub_train</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="n">n_train</span><span class="p">]</span>
+        <span class="n">sub_val</span>   <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">n_train</span><span class="p">:</span><span class="n">n_train</span><span class="o">+</span><span class="n">n_val</span><span class="p">]</span>
+        <span class="n">sub_test</span>  <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">n_train</span><span class="o">+</span><span class="n">n_val</span><span class="p">:]</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="n">sub_train</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;val&#39;</span><span class="p">,</span> <span class="n">sub_val</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="n">sub_test</span><span class="p">)</span></div>
+
+<span class="nd">@wrap_non_picklable_objects</span>
+<span class="k">def</span> <span class="nf">process_lc2</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">unique_classes</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">path</span>  <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Path&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">unique_classes</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Class&#39;</span><span class="p">])</span>
+    <span class="n">lc_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+
+    <span class="n">observations</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">lc_path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">observations</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mjd&#39;</span><span class="p">,</span> <span class="s1">&#39;mag&#39;</span><span class="p">,</span> <span class="s1">&#39;errmag&#39;</span><span class="p">]</span>
+    <span class="n">observations</span> <span class="o">=</span> <span class="n">observations</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="n">observations</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;mjd&#39;</span><span class="p">)</span>
+    <span class="n">observations</span> <span class="o">=</span> <span class="n">observations</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">keep</span><span class="o">=</span><span class="s1">&#39;last&#39;</span><span class="p">)</span>
+
+    <span class="n">numpy_lc</span> <span class="o">=</span> <span class="n">observations</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="k">return</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">],</span> <span class="n">label</span><span class="p">,</span> <span class="n">numpy_lc</span>
+
+<div class="viewcode-block" id="process_lc3"><a class="viewcode-back" href="../../../ASTROMER.core.html#ASTROMER.core.data.process_lc3">[docs]</a><span class="k">def</span> <span class="nf">process_lc3</span><span class="p">(</span><span class="n">lc_index</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">numpy_lc</span><span class="p">,</span> <span class="n">writer</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">ex</span> <span class="o">=</span> <span class="n">get_example</span><span class="p">(</span><span class="n">lc_index</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">numpy_lc</span><span class="p">)</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ex</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">())</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[INFO] </span><span class="si">{}</span><span class="s1"> could not be processed&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lc_index</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="write_records"><a class="viewcode-back" href="../../../ASTROMER.core.html#ASTROMER.core.data.write_records">[docs]</a><span class="k">def</span> <span class="nf">write_records</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">max_lcs_per_record</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">unique</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_obs</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="c1"># Get frames with fixed number of lightcurves</span>
+    <span class="n">collection</span> <span class="o">=</span> <span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">max_lcs_per_record</span><span class="p">]</span> \
+                  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">frame</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">max_lcs_per_record</span><span class="p">)]</span>
+
+    <span class="k">for</span> <span class="n">counter</span><span class="p">,</span> <span class="n">subframe</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">collection</span><span class="p">):</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">process_lc2</span><span class="p">)(</span><span class="n">row</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">unique</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> \
+                                    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">subframe</span><span class="o">.</span><span class="n">iterrows</span><span class="p">())</span>
+
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">TFRecordWriter</span><span class="p">(</span><span class="n">dest</span><span class="o">+</span><span class="s1">&#39;/chunk_</span><span class="si">{}</span><span class="s1">.record&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">counter</span><span class="p">))</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">counter2</span><span class="p">,</span> <span class="n">data_lc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
+                <span class="n">process_lc3</span><span class="p">(</span><span class="o">*</span><span class="n">data_lc</span><span class="p">,</span> <span class="n">writer</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="create_dataset"><a class="viewcode-back" href="../../../ASTROMER.core.html#ASTROMER.core.data.create_dataset">[docs]</a><span class="k">def</span> <span class="nf">create_dataset</span><span class="p">(</span><span class="n">meta_df</span><span class="p">,</span>
+                   <span class="n">source</span><span class="o">=</span><span class="s1">&#39;data/raw_data/macho/MACHO/LCs&#39;</span><span class="p">,</span>
+                   <span class="n">target</span><span class="o">=</span><span class="s1">&#39;data/records/macho/&#39;</span><span class="p">,</span>
+                   <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">subsets_frac</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">),</span>
+                   <span class="n">test_subset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">max_lcs_per_record</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                   <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span> <span class="c1"># kwargs contains additional arguments for the read_csv() function</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">bands</span> <span class="o">=</span> <span class="n">meta_df</span><span class="p">[</span><span class="s1">&#39;Band&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bands</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Filters </span><span class="si">{}</span><span class="s1"> were found. Type one to continue&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39; and&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bands</span><span class="p">)))</span>
+        <span class="n">meta_df</span> <span class="o">=</span> <span class="n">meta_df</span><span class="p">[</span><span class="n">meta_df</span><span class="p">[</span><span class="s1">&#39;Band&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">b</span><span class="p">]</span>
+
+    <span class="n">unique</span><span class="p">,</span> <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">meta_df</span><span class="p">[</span><span class="s1">&#39;Class&#39;</span><span class="p">],</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="n">info_df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unique</span>
+    <span class="n">info_df</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">counts</span>
+    <span class="n">info_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s1">&#39;objects.csv&#39;</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Separate by class</span>
+    <span class="n">cls_groups</span> <span class="o">=</span> <span class="n">meta_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Class&#39;</span><span class="p">)</span>
+
+    <span class="n">test_already_written</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">test_subset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">cls_name</span><span class="p">,</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">test_subset</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Class&#39;</span><span class="p">):</span>
+            <span class="n">dest</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="n">cls_name</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">write_records</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">max_lcs_per_record</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">unique</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">test_already_written</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">for</span> <span class="n">cls_name</span><span class="p">,</span> <span class="n">cls_meta</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">cls_groups</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">cls_groups</span><span class="p">)):</span>
+        <span class="n">subsets</span> <span class="o">=</span> <span class="n">divide_training_subset</span><span class="p">(</span><span class="n">cls_meta</span><span class="p">,</span>
+                                         <span class="n">train</span><span class="o">=</span><span class="n">subsets_frac</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                         <span class="n">val</span><span class="o">=</span><span class="n">subsets_frac</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                         <span class="n">test_meta</span> <span class="o">=</span> <span class="n">test_subset</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">subset_name</span><span class="p">,</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">subsets</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">test_already_written</span> <span class="ow">and</span> <span class="n">subset_name</span> <span class="o">==</span> <span class="s1">&#39;test&#39;</span><span class="p">:</span><span class="k">continue</span>
+            <span class="n">dest</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">subset_name</span><span class="p">,</span> <span class="n">cls_name</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">write_records</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">max_lcs_per_record</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">unique</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+<span class="c1"># ==============================</span>
+<span class="c1"># ====== LOADING FUNCTIONS =====</span>
+<span class="c1"># ==============================</span>
+<div class="viewcode-block" id="adjust_fn"><a class="viewcode-back" href="../../../ASTROMER.core.html#ASTROMER.core.data.adjust_fn">[docs]</a><span class="k">def</span> <span class="nf">adjust_fn</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">arguments</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">wrap</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">*</span><span class="n">arguments</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+    <span class="k">return</span> <span class="n">wrap</span></div>
+
+<div class="viewcode-block" id="deserialize"><a class="viewcode-back" href="../../../ASTROMER.core.html#ASTROMER.core.data.deserialize">[docs]</a><span class="k">def</span> <span class="nf">deserialize</span><span class="p">(</span><span class="n">sample</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read a serialized sample and convert it to tensor</span>
+<span class="sd">    Context and sequence features should match with the name used when writing.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        sample (binary): serialized sample</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        type: decoded sample</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">context_features</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">FixedLenFeature</span><span class="p">([],</span><span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">int64</span><span class="p">),</span>
+                        <span class="s1">&#39;length&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">FixedLenFeature</span><span class="p">([],</span><span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">int64</span><span class="p">),</span>
+                        <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">FixedLenFeature</span><span class="p">([],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">)}</span>
+    <span class="n">sequence_features</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">sequence_features</span><span class="p">[</span><span class="s1">&#39;dim_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">VarLenFeature</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+    <span class="n">context</span><span class="p">,</span> <span class="n">sequence</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">parse_single_sequence_example</span><span class="p">(</span>
+                            <span class="n">serialized</span><span class="o">=</span><span class="n">sample</span><span class="p">,</span>
+                            <span class="n">context_features</span><span class="o">=</span><span class="n">context_features</span><span class="p">,</span>
+                            <span class="n">sequence_features</span><span class="o">=</span><span class="n">sequence_features</span>
+                            <span class="p">)</span>
+
+    <span class="n">input_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;lcid&#39;</span><span class="p">]</span>   <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">context</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">)</span>
+    <span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">context</span><span class="p">[</span><span class="s1">&#39;length&#39;</span><span class="p">],</span> <span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">context</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">],</span> <span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+    <span class="n">casted_inp_parameters</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">seq_dim</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">[</span><span class="s1">&#39;dim_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span>
+        <span class="n">seq_dim</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">to_dense</span><span class="p">(</span><span class="n">seq_dim</span><span class="p">)</span>
+        <span class="n">seq_dim</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">seq_dim</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">casted_inp_parameters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">seq_dim</span><span class="p">)</span>
+
+
+    <span class="n">sequence</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">casted_inp_parameters</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sequence</span>
+    <span class="k">return</span> <span class="n">input_dict</span></div>
+
+<div class="viewcode-block" id="sample_lc"><a class="viewcode-back" href="../../../ASTROMER.core.html#ASTROMER.core.data.sample_lc">[docs]</a><span class="k">def</span> <span class="nf">sample_lc</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">max_obs</span><span class="p">,</span> <span class="n">deserialize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Sample a random window of &quot;max_obs&quot; observations from the input sequence</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">deserialize</span><span class="p">:</span>
+        <span class="n">input_dict</span> <span class="o">=</span> <span class="n">deserialize</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">input_dict</span> <span class="o">=</span> <span class="n">sample</span>
+
+    <span class="n">sequence</span> <span class="o">=</span> <span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">]</span>
+
+    <span class="n">serie_len</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">sequence</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">pivot</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">tf</span><span class="o">.</span><span class="n">greater</span><span class="p">(</span><span class="n">serie_len</span><span class="p">,</span> <span class="n">max_obs</span><span class="p">):</span>
+        <span class="n">pivot</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">([],</span>
+                                  <span class="n">minval</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                  <span class="n">maxval</span><span class="o">=</span><span class="n">serie_len</span><span class="o">-</span><span class="n">max_obs</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span>
+                                  <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+        <span class="n">sequence</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="p">[</span><span class="n">pivot</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="n">max_obs</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sequence</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="n">serie_len</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;sequence&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sequence</span>
+    <span class="k">return</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">],</span> <span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;lcid&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="get_window"><a class="viewcode-back" href="../../../ASTROMER.core.html#ASTROMER.core.data.get_window">[docs]</a><span class="k">def</span> <span class="nf">get_window</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">pivot</span><span class="p">,</span> <span class="n">max_obs</span><span class="p">):</span>
+    <span class="n">pivot</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">length</span><span class="o">-</span><span class="n">max_obs</span><span class="p">,</span> <span class="n">pivot</span><span class="p">)</span>
+    <span class="n">pivot</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">pivot</span><span class="p">)</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">max_obs</span><span class="p">)</span>
+
+    <span class="n">sliced</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="p">[</span><span class="n">pivot</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="n">end</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">sliced</span></div>
+
+<div class="viewcode-block" id="get_windows"><a class="viewcode-back" href="../../../ASTROMER.core.html#ASTROMER.core.data.get_windows">[docs]</a><span class="k">def</span> <span class="nf">get_windows</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">max_obs</span><span class="p">,</span> <span class="n">deserialize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">deserialize</span><span class="p">:</span>
+        <span class="n">input_dict</span> <span class="o">=</span> <span class="n">deserialize</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">input_dict</span> <span class="o">=</span> <span class="n">sample</span>
+
+    <span class="n">sequence</span> <span class="o">=</span> <span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">]</span>
+    <span class="n">rest</span> <span class="o">=</span> <span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;length&#39;</span><span class="p">]</span><span class="o">%</span><span class="n">max_obs</span>
+
+    <span class="n">pivots</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">tile</span><span class="p">([</span><span class="n">max_obs</span><span class="p">],</span> <span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;length&#39;</span><span class="p">]</span><span class="o">/</span><span class="n">max_obs</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">)])</span>
+    <span class="n">pivots</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">([[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pivots</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">pivots</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">pivots</span><span class="p">)</span>
+
+    <span class="n">splits</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">map_fn</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">get_window</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span>
+                                            <span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;length&#39;</span><span class="p">],</span>
+                                            <span class="n">x</span><span class="p">,</span>
+                                            <span class="n">max_obs</span><span class="p">),</span>  <span class="n">pivots</span><span class="p">,</span>
+                       <span class="n">infer_shape</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                       <span class="n">fn_output_signature</span><span class="o">=</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+
+    <span class="c1"># aqui falta retornar labels y oids</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">tile</span><span class="p">([</span><span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]],</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">splits</span><span class="p">)])</span>
+    <span class="n">ids</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">tile</span><span class="p">([</span><span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;lcid&#39;</span><span class="p">]],</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">splits</span><span class="p">)])</span>
+
+    <span class="k">return</span> <span class="n">splits</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ids</span></div>
+
+<div class="viewcode-block" id="mask_sample"><a class="viewcode-back" href="../../../ASTROMER.core.html#ASTROMER.core.data.mask_sample">[docs]</a><span class="k">def</span> <span class="nf">mask_sample</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">msk_prob</span><span class="p">,</span> <span class="n">rnd_prob</span><span class="p">,</span> <span class="n">same_prob</span><span class="p">,</span> <span class="n">max_obs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Pretraining formater</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">standardize</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">return_mean</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">seq_time</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">seq_magn</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">seq_errs</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># Save the true values</span>
+    <span class="n">orig_magn</span> <span class="o">=</span> <span class="n">seq_magn</span>
+
+    <span class="c1"># [MASK] values</span>
+    <span class="n">mask_out</span> <span class="o">=</span> <span class="n">get_masked</span><span class="p">(</span><span class="n">seq_magn</span><span class="p">,</span> <span class="n">msk_prob</span><span class="p">)</span>
+
+    <span class="c1"># [MASK] -&gt; Same values</span>
+    <span class="n">seq_magn</span><span class="p">,</span> <span class="n">mask_in</span> <span class="o">=</span> <span class="n">set_random</span><span class="p">(</span><span class="n">seq_magn</span><span class="p">,</span>
+                                   <span class="n">mask_out</span><span class="p">,</span>
+                                   <span class="n">seq_magn</span><span class="p">,</span>
+                                   <span class="n">same_prob</span><span class="p">,</span>
+                                   <span class="n">name</span><span class="o">=</span><span class="s1">&#39;set_same&#39;</span><span class="p">)</span>
+
+    <span class="c1"># [MASK] -&gt; Random value</span>
+    <span class="n">seq_magn</span><span class="p">,</span> <span class="n">mask_in</span> <span class="o">=</span> <span class="n">set_random</span><span class="p">(</span><span class="n">seq_magn</span><span class="p">,</span>
+                                   <span class="n">mask_in</span><span class="p">,</span>
+                                   <span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">seq_magn</span><span class="p">),</span>
+                                   <span class="n">rnd_prob</span><span class="p">,</span>
+                                   <span class="n">name</span><span class="o">=</span><span class="s1">&#39;set_random&#39;</span><span class="p">)</span>
+
+    <span class="n">time_steps</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">seq_magn</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">mask_out</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">mask_out</span><span class="p">,</span> <span class="p">[</span><span class="n">time_steps</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">mask_in</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">mask_in</span><span class="p">,</span> <span class="p">[</span><span class="n">time_steps</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">time_steps</span> <span class="o">&lt;</span> <span class="n">max_obs</span><span class="p">:</span>
+        <span class="n">mask_fill</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">max_obs</span> <span class="o">-</span> <span class="n">time_steps</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">mask_out</span>  <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">mask_out</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">mask_fill</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">mask_in</span>   <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">mask_in</span><span class="p">,</span> <span class="n">mask_fill</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">seq_magn</span>   <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">seq_magn</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">mask_fill</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">seq_time</span>   <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">seq_time</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">mask_fill</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">orig_magn</span>   <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">orig_magn</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">mask_fill</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">input_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;output&#39;</span><span class="p">]</span>   <span class="o">=</span> <span class="n">orig_magn</span>
+    <span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">]</span>    <span class="o">=</span> <span class="n">seq_magn</span>
+    <span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;times&#39;</span><span class="p">]</span>    <span class="o">=</span> <span class="n">seq_time</span>
+    <span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;mask_out&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mask_out</span>
+    <span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;mask_in&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="n">mask_in</span>
+    <span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;length&#39;</span><span class="p">]</span>   <span class="o">=</span> <span class="n">time_steps</span>
+    <span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span>    <span class="o">=</span> <span class="n">y</span>
+    <span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>       <span class="o">=</span> <span class="n">i</span>
+
+    <span class="k">return</span> <span class="n">input_dict</span></div>
+
+<div class="viewcode-block" id="format_label"><a class="viewcode-back" href="../../../ASTROMER.core.html#ASTROMER.core.data.format_label">[docs]</a><span class="k">def</span> <span class="nf">format_label</span><span class="p">(</span><span class="n">input_dict</span><span class="p">,</span> <span class="n">num_cls</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;input&#39;</span><span class="p">:</span><span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;times&#39;</span><span class="p">:</span><span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;times&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;mask_in&#39;</span><span class="p">:</span><span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;mask_in&#39;</span><span class="p">]</span>
+    <span class="p">}</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">one_hot</span><span class="p">(</span><span class="n">input_dict</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">],</span> <span class="n">num_cls</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span></div>
+
+<div class="viewcode-block" id="pretraining_records"><a class="viewcode-back" href="../../../ASTROMER.core.html#ASTROMER.core.data.pretraining_records">[docs]</a><span class="k">def</span> <span class="nf">pretraining_records</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">max_obs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">msk_frac</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+                        <span class="n">rnd_frac</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">same_frac</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">sampling</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_classes</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Pretraining data loader.</span>
+<span class="sd">    This method build the ASTROMER input format.</span>
+<span class="sd">    ASTROMER format is based on the BERT masking strategy.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        source (string): Record folder</span>
+<span class="sd">        batch_size (int): Batch size</span>
+<span class="sd">        no_shuffle (bool): Do not shuffle training and validation dataset</span>
+<span class="sd">        max_obs (int): Max. number of observation per serie</span>
+<span class="sd">        msk_frac (float): fraction of values to be predicted ([MASK])</span>
+<span class="sd">        rnd_frac (float): fraction of [MASKED] values to replace with random values</span>
+<span class="sd">        same_frac (float): fraction of [MASKED] values to replace with true values</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensorflow Dataset: Iterator withg preprocessed batches</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rec_paths</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">folder</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">source</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">folder</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.csv&#39;</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">folder</span><span class="p">)):</span>
+            <span class="n">rec_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">sampling</span><span class="p">:</span>
+        <span class="n">fn_0</span> <span class="o">=</span> <span class="n">adjust_fn</span><span class="p">(</span><span class="n">sample_lc</span><span class="p">,</span> <span class="n">max_obs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fn_0</span> <span class="o">=</span> <span class="n">adjust_fn</span><span class="p">(</span><span class="n">get_windows</span><span class="p">,</span> <span class="n">max_obs</span><span class="p">)</span>
+
+    <span class="n">fn_1</span> <span class="o">=</span> <span class="n">adjust_fn</span><span class="p">(</span><span class="n">mask_sample</span><span class="p">,</span> <span class="n">msk_frac</span><span class="p">,</span> <span class="n">rnd_frac</span><span class="p">,</span> <span class="n">same_frac</span><span class="p">,</span> <span class="n">max_obs</span><span class="p">)</span>
+
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">TFRecordDataset</span><span class="p">(</span><span class="n">rec_paths</span><span class="p">)</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">repeat</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">shuffle</span><span class="p">:</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">fn_0</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">sampling</span><span class="p">:</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">flat_map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">i</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="o">.</span><span class="n">from_tensor_slices</span><span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">i</span><span class="p">)))</span>
+
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">fn_1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">n_classes</span><span class="o">!=-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[INFO] Processing labels&#39;</span><span class="p">)</span>
+        <span class="n">fn_2</span> <span class="o">=</span> <span class="n">adjust_fn</span><span class="p">(</span><span class="n">format_label</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">)</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">fn_2</span><span class="p">)</span>
+
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">padded_batch</span><span class="p">(</span><span class="n">batch_size</span><span class="p">)</span><span class="o">.</span><span class="n">cache</span><span class="p">()</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">prefetch</span><span class="p">(</span><span class="n">buffer_size</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">AUTOTUNE</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">dataset</span></div>
+
+<div class="viewcode-block" id="adjust_fn_clf"><a class="viewcode-back" href="../../../ASTROMER.core.html#ASTROMER.core.data.adjust_fn_clf">[docs]</a><span class="k">def</span> <span class="nf">adjust_fn_clf</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">max_obs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">wrap</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">max_obs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+    <span class="k">return</span> <span class="n">wrap</span></div>
+
+<div class="viewcode-block" id="create_generator"><a class="viewcode-back" href="../../../ASTROMER.core.html#ASTROMER.core.data.create_generator">[docs]</a><span class="k">def</span> <span class="nf">create_generator</span><span class="p">(</span><span class="n">list_of_arrays</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">ids</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">list_of_arrays</span><span class="p">)))</span>
+    <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">list_of_arrays</span><span class="p">)))</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">list_of_arrays</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">ids</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="p">{</span><span class="s1">&#39;input&#39;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span>
+               <span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="nb">int</span><span class="p">(</span><span class="n">j</span><span class="p">),</span>
+               <span class="s1">&#39;lcid&#39;</span><span class="p">:</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">),</span>
+               <span class="s1">&#39;length&#39;</span><span class="p">:</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])}</span></div>
+
+<div class="viewcode-block" id="load_numpy"><a class="viewcode-back" href="../../../ASTROMER.core.html#ASTROMER.core.data.load_numpy">[docs]</a><span class="k">def</span> <span class="nf">load_numpy</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span>
+               <span class="n">ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+               <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="n">sampling</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="n">max_obs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+               <span class="n">msk_frac</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+               <span class="n">rnd_frac</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+               <span class="n">same_frac</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+               <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">sampling</span><span class="p">:</span>
+        <span class="n">fn_0</span> <span class="o">=</span> <span class="n">adjust_fn</span><span class="p">(</span><span class="n">sample_lc</span><span class="p">,</span> <span class="n">max_obs</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fn_0</span> <span class="o">=</span> <span class="n">adjust_fn</span><span class="p">(</span><span class="n">get_windows</span><span class="p">,</span> <span class="n">max_obs</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">fn_1</span> <span class="o">=</span> <span class="n">adjust_fn</span><span class="p">(</span><span class="n">mask_sample</span><span class="p">,</span> <span class="n">msk_frac</span><span class="p">,</span> <span class="n">rnd_frac</span><span class="p">,</span> <span class="n">same_frac</span><span class="p">,</span> <span class="n">max_obs</span><span class="p">)</span>
+
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="o">.</span><span class="n">from_generator</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">create_generator</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span><span class="n">labels</span><span class="p">,</span><span class="n">ids</span><span class="p">),</span>
+                                         <span class="n">output_types</span><span class="o">=</span> <span class="p">{</span><span class="s1">&#39;input&#39;</span><span class="p">:</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
+                                                        <span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span>
+                                                        <span class="s1">&#39;lcid&#39;</span><span class="p">:</span><span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">,</span>
+                                                        <span class="s1">&#39;length&#39;</span><span class="p">:</span><span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">},</span>
+                                         <span class="n">output_shapes</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;input&#39;</span><span class="p">:(</span><span class="kc">None</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span>
+                                                        <span class="s1">&#39;label&#39;</span><span class="p">:(),</span>
+                                                        <span class="s1">&#39;lcid&#39;</span><span class="p">:(),</span>
+                                                        <span class="s1">&#39;length&#39;</span><span class="p">:()})</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">repeat</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">shuffle</span><span class="p">:</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">fn_0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">sampling</span><span class="p">:</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">flat_map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">i</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="o">.</span><span class="n">from_tensor_slices</span><span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">i</span><span class="p">)))</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">fn_1</span><span class="p">)</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">padded_batch</span><span class="p">(</span><span class="n">batch_size</span><span class="p">)</span><span class="o">.</span><span class="n">cache</span><span class="p">()</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">prefetch</span><span class="p">(</span><span class="n">buffer_size</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">AUTOTUNE</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dataset</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Simon Salazar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

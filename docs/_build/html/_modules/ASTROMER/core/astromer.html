@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASTROMER.core.astromer &mdash; ASTROMER 0.0.6 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASTROMER
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">LIBRARY DOCUMENTATION</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../ASTROMER.html">ASTROMER MODELS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ASTROMER.html#module-ASTROMER.preprocessing">Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ASTROMER.html#module-ASTROMER.utils">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ASTROMER.html#quick-start">Quick-start</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASTROMER</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ASTROMER.core.astromer</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ASTROMER.core.astromer</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">ASTROMER.core.output</span>    <span class="kn">import</span> <span class="n">RegLayer</span>
+<span class="kn">from</span> <span class="nn">ASTROMER.core.tboard</span>    <span class="kn">import</span> <span class="n">save_scalar</span><span class="p">,</span> <span class="n">draw_graph</span>
+<span class="kn">from</span> <span class="nn">ASTROMER.core.losses</span>    <span class="kn">import</span> <span class="n">custom_rmse</span><span class="p">,</span> <span class="n">custom_bce</span>
+<span class="kn">from</span> <span class="nn">ASTROMER.core.metrics</span>   <span class="kn">import</span> <span class="n">custom_acc</span>
+<span class="kn">from</span> <span class="nn">ASTROMER.core.encoder</span>   <span class="kn">import</span> <span class="n">Encoder</span>
+
+<span class="kn">from</span> <span class="nn">tensorflow.keras.layers</span> <span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Dense</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras.optimizers</span> <span class="kn">import</span> <span class="n">Adam</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;tensorflow&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>  <span class="c1"># suppress warnings</span>
+<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;clear&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="get_ASTROMER"><a class="viewcode-back" href="../../../ASTROMER.core.html#ASTROMER.core.astromer.get_ASTROMER">[docs]</a><span class="k">def</span> <span class="nf">get_ASTROMER</span><span class="p">(</span><span class="n">num_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                 <span class="n">d_model</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+                 <span class="n">num_heads</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                 <span class="n">dff</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
+                 <span class="n">base</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+                 <span class="n">dropout</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+                 <span class="n">use_leak</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">no_train</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">maxlen</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                 <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="n">serie</span>  <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">maxlen</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                  <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;input&#39;</span><span class="p">)</span>
+    <span class="n">times</span>  <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">maxlen</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                  <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;times&#39;</span><span class="p">)</span>
+    <span class="n">mask</span>   <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">maxlen</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                  <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;mask&#39;</span><span class="p">)</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">maxlen</span><span class="p">,),</span>
+                  <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span>
+                  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;length&#39;</span><span class="p">)</span>
+
+    <span class="n">placeholder</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;input&#39;</span><span class="p">:</span><span class="n">serie</span><span class="p">,</span>
+                   <span class="s1">&#39;mask_in&#39;</span><span class="p">:</span><span class="n">mask</span><span class="p">,</span>
+                   <span class="s1">&#39;times&#39;</span><span class="p">:</span><span class="n">times</span><span class="p">,</span>
+                   <span class="s1">&#39;length&#39;</span><span class="p">:</span><span class="n">length</span><span class="p">}</span>
+
+    <span class="n">encoder</span> <span class="o">=</span> <span class="n">Encoder</span><span class="p">(</span><span class="n">num_layers</span><span class="p">,</span>
+                <span class="n">d_model</span><span class="p">,</span>
+                <span class="n">num_heads</span><span class="p">,</span>
+                <span class="n">dff</span><span class="p">,</span>
+                <span class="n">base</span><span class="o">=</span><span class="n">base</span><span class="p">,</span>
+                <span class="n">rate</span><span class="o">=</span><span class="n">dropout</span><span class="p">,</span>
+                <span class="n">use_leak</span><span class="o">=</span><span class="n">use_leak</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;encoder&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">no_train</span><span class="p">:</span>
+        <span class="n">encoder</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">placeholder</span><span class="p">)</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">RegLayer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;regression&#39;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">placeholder</span><span class="p">,</span>
+                 <span class="n">outputs</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+                 <span class="n">name</span><span class="o">=</span><span class="s2">&quot;ASTROMER&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="train_step"><a class="viewcode-back" href="../../../ASTROMER.core.html#ASTROMER.core.astromer.train_step">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
+<span class="k">def</span> <span class="nf">train_step</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">opt</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">GradientTape</span><span class="p">()</span> <span class="k">as</span> <span class="n">tape</span><span class="p">:</span>
+        <span class="n">x_pred</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+
+        <span class="n">mse</span> <span class="o">=</span> <span class="n">custom_rmse</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">batch</span><span class="p">[</span><span class="s1">&#39;output&#39;</span><span class="p">],</span>
+                         <span class="n">y_pred</span><span class="o">=</span><span class="n">x_pred</span><span class="p">,</span>
+                         <span class="n">mask</span><span class="o">=</span><span class="n">batch</span><span class="p">[</span><span class="s1">&#39;mask_out&#39;</span><span class="p">])</span>
+
+
+    <span class="n">grads</span> <span class="o">=</span> <span class="n">tape</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">mse</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">trainable_weights</span><span class="p">)</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">apply_gradients</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">grads</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">trainable_weights</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">mse</span></div>
+
+<div class="viewcode-block" id="valid_step"><a class="viewcode-back" href="../../../ASTROMER.core.html#ASTROMER.core.astromer.valid_step">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
+<span class="k">def</span> <span class="nf">valid_step</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">return_pred</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">normed</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">GradientTape</span><span class="p">()</span> <span class="k">as</span> <span class="n">tape</span><span class="p">:</span>
+        <span class="n">x_pred</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+        <span class="n">x_true</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s1">&#39;output&#39;</span><span class="p">]</span>
+        <span class="n">mse</span> <span class="o">=</span> <span class="n">custom_rmse</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">x_true</span><span class="p">,</span>
+                          <span class="n">y_pred</span><span class="o">=</span><span class="n">x_pred</span><span class="p">,</span>
+                          <span class="n">mask</span><span class="o">=</span><span class="n">batch</span><span class="p">[</span><span class="s1">&#39;mask_out&#39;</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">return_pred</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">mse</span><span class="p">,</span> <span class="n">x_pred</span><span class="p">,</span> <span class="n">x_true</span>
+    <span class="k">return</span> <span class="n">mse</span></div>
+
+<div class="viewcode-block" id="train"><a class="viewcode-back" href="../../../ASTROMER.core.html#ASTROMER.core.astromer.train">[docs]</a><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
+          <span class="n">train_dataset</span><span class="p">,</span>
+          <span class="n">valid_dataset</span><span class="p">,</span>
+          <span class="n">patience</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+          <span class="n">exp_path</span><span class="o">=</span><span class="s1">&#39;./experiments/test&#39;</span><span class="p">,</span>
+          <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+          <span class="n">finetuning</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+          <span class="n">use_random</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+          <span class="n">num_cls</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+          <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+          <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">exp_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Tensorboard</span>
+    <span class="n">train_writter</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">create_file_writer</span><span class="p">(</span>
+                                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">exp_path</span><span class="p">,</span> <span class="s1">&#39;logs&#39;</span><span class="p">,</span> <span class="s1">&#39;train&#39;</span><span class="p">))</span>
+    <span class="n">valid_writter</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">create_file_writer</span><span class="p">(</span>
+                                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">exp_path</span><span class="p">,</span> <span class="s1">&#39;logs&#39;</span><span class="p">,</span> <span class="s1">&#39;valid&#39;</span><span class="p">))</span>
+
+    <span class="n">batch</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">train_dataset</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">1</span><span class="p">)][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">draw_graph</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">train_writter</span><span class="p">,</span> <span class="n">exp_path</span><span class="p">)</span>
+
+    <span class="c1"># Optimizer</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">lr</span><span class="p">,</span>
+                                         <span class="n">beta_1</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
+                                         <span class="n">beta_2</span><span class="o">=</span><span class="mf">0.98</span><span class="p">,</span>
+                                         <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">)</span>
+    <span class="c1"># To save metrics</span>
+    <span class="n">train_mse</span>  <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">Mean</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;train_mse&#39;</span><span class="p">)</span>
+    <span class="n">valid_mse</span>  <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">Mean</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;valid_mse&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Training Loop</span>
+    <span class="n">best_loss</span> <span class="o">=</span> <span class="mf">999999.</span>
+    <span class="n">es_count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;epoch&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="n">pbar</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">train_batch</span> <span class="ow">in</span> <span class="n">train_dataset</span><span class="p">:</span>
+            <span class="n">mse</span> <span class="o">=</span> <span class="n">train_step</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_batch</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">)</span>
+            <span class="n">train_mse</span><span class="o">.</span><span class="n">update_state</span><span class="p">(</span><span class="n">mse</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">valid_batch</span> <span class="ow">in</span> <span class="n">valid_dataset</span><span class="p">:</span>
+            <span class="n">mse</span> <span class="o">=</span> <span class="n">valid_step</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">valid_batch</span><span class="p">)</span>
+            <span class="n">valid_mse</span><span class="o">.</span><span class="n">update_state</span><span class="p">(</span><span class="n">mse</span><span class="p">)</span>
+
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;EPOCH </span><span class="si">{}</span><span class="s1"> - ES COUNT: </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1"> train mse: </span><span class="si">{:.4f}</span><span class="s1"> - val mse: </span><span class="si">{:.4f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span>
+                                                                                      <span class="n">es_count</span><span class="p">,</span>
+                                                                                      <span class="n">patience</span><span class="p">,</span>
+                                                                                      <span class="n">train_mse</span><span class="o">.</span><span class="n">result</span><span class="p">(),</span>
+                                                                                      <span class="n">valid_mse</span><span class="o">.</span><span class="n">result</span><span class="p">())</span>
+
+        <span class="n">pbar</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">save_scalar</span><span class="p">(</span><span class="n">train_writter</span><span class="p">,</span> <span class="n">train_mse</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">)</span>
+        <span class="n">save_scalar</span><span class="p">(</span><span class="n">valid_writter</span><span class="p">,</span> <span class="n">valid_mse</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">)</span>
+
+
+        <span class="k">if</span> <span class="n">valid_mse</span><span class="o">.</span><span class="n">result</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">best_loss</span><span class="p">:</span>
+            <span class="n">best_loss</span> <span class="o">=</span> <span class="n">valid_mse</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+            <span class="n">es_count</span> <span class="o">=</span> <span class="mf">0.</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">save_weights</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">exp_path</span><span class="p">,</span> <span class="s1">&#39;weights&#39;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">es_count</span><span class="o">+=</span><span class="mf">1.</span>
+        <span class="k">if</span> <span class="n">es_count</span> <span class="o">==</span> <span class="n">patience</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[INFO] Early Stopping Triggered&#39;</span><span class="p">)</span>
+            <span class="k">break</span>
+
+        <span class="n">train_mse</span><span class="o">.</span><span class="n">reset_states</span><span class="p">()</span>
+        <span class="n">valid_mse</span><span class="o">.</span><span class="n">reset_states</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="predict"><a class="viewcode-back" href="../../../ASTROMER.core.html#ASTROMER.core.astromer.predict">[docs]</a><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">dataset</span><span class="p">,</span>
+            <span class="n">conf</span><span class="p">,</span>
+            <span class="n">predic_proba</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+    <span class="n">total_mse</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">reconstructions</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="n">masks</span><span class="p">,</span> <span class="n">times</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">step</span><span class="p">,</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">dataset</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;prediction&#39;</span><span class="p">):</span>
+        <span class="n">mse</span><span class="p">,</span> <span class="n">x_pred</span><span class="p">,</span> <span class="n">x_true</span> <span class="o">=</span> <span class="n">valid_step</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
+                                         <span class="n">batch</span><span class="p">,</span>
+                                         <span class="n">return_pred</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                         <span class="n">normed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">total_mse</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mse</span><span class="p">)</span>
+        <span class="n">times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s1">&#39;times&#39;</span><span class="p">])</span>
+        <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_true</span><span class="p">)</span>
+        <span class="n">reconstructions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_pred</span><span class="p">)</span>
+        <span class="n">masks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s1">&#39;mask_out&#39;</span><span class="p">])</span>
+
+    <span class="n">res</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mse&#39;</span><span class="p">:</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">total_mse</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span>
+           <span class="s1">&#39;x_pred&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">reconstructions</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+           <span class="s1">&#39;x_true&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+           <span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">masks</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+           <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="mi">0</span><span class="p">)}</span>
+
+    <span class="k">return</span> <span class="n">res</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Simon Salazar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

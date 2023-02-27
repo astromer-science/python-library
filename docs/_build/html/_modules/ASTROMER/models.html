@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASTROMER.models &mdash; ASTROMER 0.0.6 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ASTROMER
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">LIBRARY DOCUMENTATION</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ASTROMER.html">Single-Band Encoder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ASTROMER.html#module-ASTROMER.preprocessing">Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ASTROMER.html#module-ASTROMER.utils">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ASTROMER.html#quick-start">Quick-start</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ASTROMER</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ASTROMER.models</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ASTROMER.models</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">ASTROMER.core.astromer</span> <span class="kn">import</span> <span class="n">get_ASTROMER</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">valid_step</span>
+<span class="kn">from</span> <span class="nn">ASTROMER.utils</span> <span class="kn">import</span> <span class="n">download_weights</span>
+<span class="kn">from</span> <span class="nn">ASTROMER.core.data</span> <span class="kn">import</span> <span class="n">load_numpy</span>
+
+
+
+<div class="viewcode-block" id="SingleBandEncoder"><a class="viewcode-back" href="../../ASTROMER.html#ASTROMER.models.SingleBandEncoder">[docs]</a><span class="k">class</span> <span class="nc">SingleBandEncoder</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This class is a transformer-based model that process the input and generate a fixed-size representation</span>
+<span class="sd">        Since each light curve has two characteristics (magnitude and time) we transform into</span>
+<span class="sd">        embeddings Z = 200x256.</span>
+
+<span class="sd">        The maximum number of observations remain fixed and masked, so every Z had the same length even if some</span>
+<span class="sd">        light curves are shorter than others.</span>
+<span class="sd">    </span>
+<span class="sd">        :param num_layer: Number of self-attention blocks or transformer layers in the encoder.</span>
+<span class="sd">        :type num_layer: Integer</span>
+
+<span class="sd">        :param d_model: Determines the dimensionality of the model&#39;s internal representation (must be divisible by &#39;num_heads&#39;).</span>
+<span class="sd">        :type d_model: Integer</span>
+
+<span class="sd">        :param num_heads: Number of attention heads used in an attention layer.</span>
+<span class="sd">        :type num_heads: Integer</span>
+
+<span class="sd">        :param dff: Number of neurons for the fully-connected layer applied after the attention layers. It consists of two linear transformations with a non-linear activation function in between.</span>
+<span class="sd">        :type dff: Integer</span>
+
+<span class="sd">        :param base: Value that defines the maximum and minimum wavelengths of the positional encoder (see equation 4 on Oliva-Donoso et al. 2022). Is used to define the range of positions the attention mechanism uses to compute the attention weights.</span>
+<span class="sd">        :type base: Float32</span>
+
+<span class="sd">        :param dropout: Regularization applied to output of the fully-connected layer to prevent overfitting. Randomly dropping out (i.e., setting to zero) some fraction of the input units in a layer during training.</span>
+<span class="sd">        :type dropout: Float32</span>
+
+<span class="sd">        :param maxlen: Maximum length to process in the encoder. It is used in the SingleBandEncoder class to limit the input sequences&#39; length when passed to the transformer-based model.</span>
+<span class="sd">        :type maxlen: Integer</span>
+
+<span class="sd">        :param batch_size: Number of samples to be used in a forward pass. Note an epoch is completed when all batches were processed (default none).</span>
+<span class="sd">        :type batch_size: Integer  </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                       <span class="n">d_model</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+                       <span class="n">num_heads</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                       <span class="n">dff</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
+                       <span class="n">base</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+                       <span class="n">dropout</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+                       <span class="n">maxlen</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                       <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">SingleBandEncoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_layers</span><span class="o">=</span><span class="n">num_layers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_model</span><span class="o">=</span><span class="n">d_model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="o">=</span><span class="n">num_heads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dff</span><span class="o">=</span><span class="n">dff</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">=</span><span class="n">base</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="o">=</span><span class="n">dropout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxlen</span><span class="o">=</span><span class="n">maxlen</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">get_ASTROMER</span><span class="p">(</span><span class="n">num_layers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_layers</span><span class="p">,</span>
+                                  <span class="n">d_model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">d_model</span><span class="p">,</span>
+                                  <span class="n">num_heads</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span>
+                                  <span class="n">dff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dff</span><span class="p">,</span>
+                                  <span class="n">base</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">,</span>
+                                  <span class="n">dropout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">,</span>
+                                  <span class="n">use_leak</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                  <span class="n">no_train</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                  <span class="n">maxlen</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">maxlen</span><span class="p">,</span>
+                                  <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
+<div class="viewcode-block" id="SingleBandEncoder.fit"><a class="viewcode-back" href="../../ASTROMER.html#ASTROMER.models.SingleBandEncoder.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+            <span class="n">train_batches</span><span class="p">,</span>
+            <span class="n">valid_batches</span><span class="p">,</span>
+            <span class="n">epochs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="n">patience</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+            <span class="n">lr</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
+            <span class="n">project_path</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The ‘fit()’ method trains ASTROMER for a given number of epochs. After each epoch, the model&#39;s performance is evaluated on the validation data, and the training stops if there is no improvement in a specified number of epochs (patience).</span>
+
+<span class="sd">        :param train_batches: Training data already formatted as TF.data.Dataset</span>
+<span class="sd">        :type train_batches: Object</span>
+
+<span class="sd">        :param valid_batches: Validation data already formatted as TF.data.Dataset</span>
+<span class="sd">        :type valid_batches: Object</span>
+
+<span class="sd">        :param epochs: Number of training loops in where all light curves have been processed.</span>
+<span class="sd">        :type epochs: Integer</span>
+
+<span class="sd">        :param patience: The number of epochs with no improvement after which training will be stopped.</span>
+<span class="sd">        :type patience: Integer</span>
+
+<span class="sd">        :param lr: A float specifying the learning rate</span>
+<span class="sd">        :type lr: Float32</span>
+
+<span class="sd">        :param project_path: Path for saving weights and training logs</span>
+
+<span class="sd">        :param verbose: if non zero, progress messages are printed. Above 50, the output is sent to stdout. The frequency of the messages increases with the verbosity level. If it more than 10, all iterations are reported.&quot;</span>
+<span class="sd">        :type verbose: Integer</span>
+
+<span class="sd">        :return:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">train</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+              <span class="n">train_batches</span><span class="p">,</span> <span class="n">valid_batches</span><span class="p">,</span>
+              <span class="n">patience</span><span class="o">=</span><span class="n">patience</span><span class="p">,</span>
+              <span class="n">exp_path</span><span class="o">=</span><span class="n">project_path</span><span class="p">,</span>
+              <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span>
+              <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+              <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SingleBandEncoder.encode"><a class="viewcode-back" href="../../ASTROMER.html#ASTROMER.models.SingleBandEncoder.encode">[docs]</a>    <span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+               <span class="n">dataset</span><span class="p">,</span>
+               <span class="n">oids_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+               <span class="n">concatenate</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method encodes a dataset of light curves into a fixed-dimensional embedding using the ASTROMER encoder.</span>
+<span class="sd">        The method first checks the format of the dataset containing the light curves.</span>
+
+<span class="sd">        Then, it loads the dataset using predefined functions from the ‘data’ module. In this part, if a light curve contains more than 200 observations, ASTROMER will divide it into shorter windows of 200 length.</span>
+
+<span class="sd">        After loading data, the data pass through the encoder layer to obtain the embeddings.</span>
+
+
+<span class="sd">        :param dataset: The input data to be encoded. It can be a list of numpy arrays or a tensorflow dataset.</span>
+<span class="sd">        :type dataset:</span>
+
+<span class="sd">        :param oids_list: list of object IDs. Since ASTROMER can only process fixed sequence of 200 observations, providing the IDs allows the model to concatenate windows when the length of the objects is larger than 200.</span>
+<span class="sd">        :type oids_list: List</span>
+
+<span class="sd">        :param labels: an optional list of labels for the objects associated to the input dataset.</span>
+<span class="sd">        :type labels:</span>
+
+<span class="sd">        :param batch_size: the number of samples to be used in a forward-pass within the encoder. Default is 1.</span>
+<span class="sd">        :type batch_size:</span>
+
+<span class="sd">        :param concatenate: a boolean indicating whether to concatenate the embeddings of objects with the same ID into a single vector.</span>
+<span class="sd">        :type concatenate: Boolean</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[INFO] Loading numpy arrays&#39;</span><span class="p">)</span>
+            <span class="n">dataset</span> <span class="o">=</span> <span class="n">load_numpy</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="n">oids_list</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+                                 <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">sampling</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                 <span class="n">max_obs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">maxlen</span><span class="p">)</span>
+
+        <span class="n">encoder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;encoder&#39;</span><span class="p">)</span>
+
+        <span class="n">att</span><span class="p">,</span> <span class="n">lens</span><span class="p">,</span> <span class="n">ids</span> <span class="o">=</span> <span class="p">[],[],[]</span>
+        <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">dataset</span><span class="p">:</span>
+            <span class="n">emb</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+
+            <span class="n">sizes</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">batch</span><span class="p">[</span><span class="s1">&#39;mask_in&#39;</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">sizes</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">sizes</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+            <span class="n">att</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">emb</span><span class="p">)</span>
+            <span class="n">lens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sizes</span><span class="p">)</span>
+            <span class="n">ids</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">))</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]])</span>
+
+        <span class="k">if</span> <span class="n">concatenate</span><span class="p">:</span>
+            <span class="n">att</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">att</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">lens</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">lens</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+            <span class="n">final_att</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">oid</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">ids</span><span class="p">):</span>
+                <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ids</span> <span class="o">==</span> <span class="n">oid</span><span class="p">)</span>
+                <span class="n">foo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">att</span><span class="p">[</span><span class="n">indices</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">goo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">lens</span><span class="p">[</span><span class="n">indices</span><span class="p">])</span>
+                <span class="n">final_att</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">foo</span><span class="p">[:</span><span class="n">goo</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">final_att</span>
+        <span class="k">return</span> <span class="n">att</span></div>
+
+<div class="viewcode-block" id="SingleBandEncoder.load_weights"><a class="viewcode-back" href="../../ASTROMER.html#ASTROMER.models.SingleBandEncoder.load_weights">[docs]</a>    <span class="k">def</span> <span class="nf">load_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weights_folder</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The ‘load_weights()’ method loads pre-trained parameters into the model architecture. The method loads the weights from the file located at {weights_folder}/weights directory, which is assumed to be in TensorFlow checkpoint format.</span>
+
+<span class="sd">        :param weights_folder: the path to the folder containing the pre-trained weights.</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">weights_path</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/weights&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">weights_folder</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="n">weights_path</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SingleBandEncoder.from_pretraining"><a class="viewcode-back" href="../../ASTROMER.html#ASTROMER.models.SingleBandEncoder.from_pretraining">[docs]</a>    <span class="k">def</span> <span class="nf">from_pretraining</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;macho&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loads a pre-trained model with pre-trained weights for a specific astronomical dataset. This method allows users to easily load pre-trained models for astronomical time-series datasets and use them for their purposes.</span>
+
+<span class="sd">        This method checks if you have the weights locally, if not then downloads and then uploads them.</span>
+
+<span class="sd">        :param name: Corresponds to the name of the survey used to pre-train ASTROMER. The name of the survey should match with the name of the zip file in https://github.com/astromer-science/weights</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">remote</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/astromer-science/weights/raw/main/</span><span class="si">{}</span><span class="s1">.zip&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">local</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;weights&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">local</span><span class="p">):</span>
+            <span class="n">download_weights</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">local</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[INFO] Weights already downloaded&#39;</span><span class="p">)</span>
+
+        <span class="n">conf_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="s1">&#39;conf.json&#39;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">conf_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+            <span class="n">conf</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+
+        <span class="n">model</span> <span class="o">=</span>  <span class="n">SingleBandEncoder</span><span class="p">(</span><span class="n">num_layers</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;layers&#39;</span><span class="p">],</span>
+                                   <span class="n">d_model</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;head_dim&#39;</span><span class="p">],</span>
+                                   <span class="n">num_heads</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;heads&#39;</span><span class="p">],</span>
+                                   <span class="n">dff</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;dff&#39;</span><span class="p">],</span>
+                                   <span class="n">base</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;base&#39;</span><span class="p">],</span>
+                                   <span class="n">dropout</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;dropout&#39;</span><span class="p">],</span>
+                                   <span class="n">maxlen</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;max_obs&#39;</span><span class="p">])</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="n">local</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">model</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Simon Salazar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

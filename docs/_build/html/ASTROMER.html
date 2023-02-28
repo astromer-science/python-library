@@ -44,6 +44,7 @@
               <p class="caption" role="heading"><span class="caption-text">LIBRARY DOCUMENTATION</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">ASTROMER</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#models">Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#single-band-encoder">Single-Band Encoder</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#ASTROMER.models.SingleBandEncoder.encode"><code class="docutils literal notranslate"><span class="pre">SingleBandEncoder.encode()</span></code></a></li>
@@ -54,7 +55,10 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#module-ASTROMER.preprocessing">Preprocessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ASTROMER.preprocessing">Preprocessing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ASTROMER.preprocessing.make_pretraining"><code class="docutils literal notranslate"><span class="pre">make_pretraining()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ASTROMER.utils">Utils</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#ASTROMER.utils.download_weights"><code class="docutils literal notranslate"><span class="pre">download_weights()</span></code></a></li>
 </ul>
@@ -96,7 +100,9 @@
              
   <section id="astromer">
 <h1>ASTROMER<a class="headerlink" href="#astromer" title="Permalink to this heading"></a></h1>
-<hr class="docutils" />
+<section id="models">
+<h2>Models<a class="headerlink" href="#models" title="Permalink to this heading"></a></h2>
+</section>
 <section id="single-band-encoder">
 <h2>Single-Band Encoder<a class="headerlink" href="#single-band-encoder" title="Permalink to this heading"></a></h2>
 <blockquote class="epigraph">
@@ -213,6 +219,12 @@ The method first checks the format of the dataset containing the light curves.</
 </section>
 <section id="module-ASTROMER.preprocessing">
 <span id="preprocessing"></span><h2>Preprocessing<a class="headerlink" href="#module-ASTROMER.preprocessing" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ASTROMER.preprocessing.make_pretraining">
+<span class="sig-prename descclassname"><span class="pre">ASTROMER.preprocessing.</span></span><span class="sig-name descname"><span class="pre">make_pretraining</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shuffle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_obs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msk_frac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rnd_frac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_frac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">numpy_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ASTROMER/preprocessing.html#make_pretraining"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ASTROMER.preprocessing.make_pretraining" title="Permalink to this definition"></a></dt>
+<dd><p>agregar explícitamente si es listado es numpy y si es string es pretraining</p>
+</dd></dl>
+
 </section>
 <section id="module-ASTROMER.utils">
 <span id="utils"></span><h2>Utils<a class="headerlink" href="#module-ASTROMER.utils" title="Permalink to this heading"></a></h2>

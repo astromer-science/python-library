@@ -1,6 +1,8 @@
 import requests
 import zipfile
+import pathlib
 import os
+
 
 def download_weights(url, target):
     """
@@ -22,8 +24,8 @@ def download_weights(url, target):
     path_zip = '{}.zip'.format(target)
     with open(path_zip, 'wb') as f:
         f.write(r.content)
-
+    
     with zipfile.ZipFile(path_zip, 'r') as zip_ref:
-        zip_ref.extractall('/'.join(path_zip.split('/')[:-1]))
+        zip_ref.extractall(pathlib.Path(path_zip).parent.resolve())
 
     os.remove(path_zip)

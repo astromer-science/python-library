@@ -22,6 +22,8 @@ Single-Band Encoder
 Preprocessing
 ============================
 
+.. epigraph::This method creates the ASTRONOMER input format, which is based on the BERT masking strategy (Devlin et al., 2018) and results in all samples having the same length.
+
 .. automodule:: ASTROMER.preprocessing
    :members:
    :undoc-members:
@@ -135,10 +137,3 @@ Fine Tune
 
 .. epigraph:: For large datasets is recommended to use Tensorflow Records `see this tutorial to execute our data pipeline <https://github.com/astromer-science/main-code/blob/main/presentation/notebooks/create_records.ipynb>`_
 
-
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Go deep in our models
-
-   ASTROMER.core

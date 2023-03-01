@@ -1,7 +1,4 @@
 from .core.data import load_numpy, pretraining_records
-"""
- This method build the ASTROMER input format, that is based on the BERT (Devlin et al., 2018) masking strategy.
-"""
 
 def make_pretraining(input,
                batch_size=1,
@@ -13,8 +10,37 @@ def make_pretraining(input,
                same_frac=0.,
                repeat=1,
                **numpy_args):
+    
     """
-    agregar explícitamente si es listado es numpy y si es string es pretraining
+    This method receives an object as input and determines if it's a numpy array or a string. Both are data sets of light curves, but we use "records" (string) for extensive data sets returning a Tensorflow Dataset insted of a np.array -- e.g.: loading all 'macho' observations.
+    
+    :param input: The data set containing the light curves.
+    :type input: object
+
+    :param batch_size: This integer determines the number of subsets that we will pass to our model.
+    :type batch_size: Integer
+
+    :param shuffle: A boolean indicating whether to rearrange samples randomly
+    :type shuffle: Boolean
+
+    :param sampling: A Boolean that when is true, indicates the model to take samples of every light curve instead of all observation samples. 
+    :type sampling: Boolean
+
+    :param max_obs: This Integer indicates how big each lightcurve sample will be. e.g. (with max_obs = 100): The length of a light curve is 720 observations so the model will generate 7 blocks of 100 observations, and the sample with 20 cases will be completed using padding with zero values after the last point in order to obtain a sequence of length 100.
+    :type max_obs: Integer
+
+    :param msk_frac: The fraction of samples that will be masked by the model
+    :type msk_frac: Float32
+
+    :param rnd_frac: The fraction of samples in which their values will be changed by random numbers.
+    :type rnd_frac: Float32
+
+    :param same_frac: It is the fraction of the masked observations that you unmask and allow to be processed in the attention layer
+    :type same_frac: Float32
+
+    :param repeat: This Integer determines the number of times the same data set is repeated.
+    :type repeat: Integer
+
     """
     if isinstance(input, str):
         print("[INFO] Loading Records")

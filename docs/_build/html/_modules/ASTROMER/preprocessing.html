@@ -82,8 +82,8 @@
                <span class="o">**</span><span class="n">numpy_args</span><span class="p">):</span>
 <span class="w">    </span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This method receives an object as input and determines if it&#39;s a numpy array or a string. Both are data sets of light curves, but we use &quot;records&quot; (string) for extensive data sets returning a Tensorflow Dataset insted of a np.array -- e.g.: loading all &#39;macho&#39; observations.</span>
-<span class="sd">    </span>
+<span class="sd">    Load and format data to feed ASTROMER model. It can process either a list of bumpy arrays or tf.records. At the the end of this method, a tensorflow dataset is generated following the preprocessing pipeline explained in Section 5.3 (Donoso-Oliva, et al. 2022) </span>
+<span class="sd">   </span>
 <span class="sd">    :param input: The data set containing the light curves.</span>
 <span class="sd">    :type input: object</span>
 

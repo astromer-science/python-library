@@ -219,11 +219,11 @@ def deserialize(sample):
     input_dict['input'] = sequence
     return input_dict
 
-def sample_lc(sample, max_obs, deserialize=True):
+def sample_lc(sample, max_obs, binary=True):
     '''
     Sample a random window of "max_obs" observations from the input sequence
     '''
-    if deserialize:
+    if binary:
         input_dict = deserialize(sample)
     else:
         input_dict = sample
@@ -254,8 +254,8 @@ def get_window(sequence, length, pivot, max_obs):
     sliced = tf.slice(sequence, [pivot, 0], [end, -1])
     return sliced
 
-def get_windows(sample, max_obs, deserialize=True):
-    if deserialize:
+def get_windows(sample, max_obs, binary=True):
+    if binary:
         input_dict = deserialize(sample)
     else:
         input_dict = sample

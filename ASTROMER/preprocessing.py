@@ -12,8 +12,8 @@ def make_pretraining(input,
                **numpy_args):
     
     """
-    This method receives an object as input and determines if it's a numpy array or a string. Both are data sets of light curves, but we use "records" (string) for extensive data sets returning a Tensorflow Dataset insted of a np.array -- e.g.: loading all 'macho' observations.
-    
+    Load and format data to feed ASTROMER model. It can process either a list of bumpy arrays or tf.records. At the the end of this method, a tensorflow dataset is generated following the preprocessing pipeline explained in Section 5.3 (Donoso-Oliva, et al. 2022) 
+   
     :param input: The data set containing the light curves.
     :type input: object
 

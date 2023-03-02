@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASTROMER.preprocessing &mdash; ASTROMER 0.0.6 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #cf3a23" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ASTROMER
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">LIBRARY DOCUMENTATION</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ASTROMER.html">ASTROMER</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #cf3a23" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ASTROMER</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ASTROMER.preprocessing</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ASTROMER.preprocessing</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.core.data</span> <span class="kn">import</span> <span class="n">load_numpy</span><span class="p">,</span> <span class="n">pretraining_records</span>
+
+<div class="viewcode-block" id="make_pretraining"><a class="viewcode-back" href="../../ASTROMER.html#ASTROMER.preprocessing.make_pretraining">[docs]</a><span class="k">def</span> <span class="nf">make_pretraining</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span>
+               <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+               <span class="n">shuffle</span><span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+               <span class="n">sampling</span><span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+               <span class="n">max_obs</span><span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+               <span class="n">msk_frac</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+               <span class="n">rnd_frac</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+               <span class="n">same_frac</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+               <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+               <span class="o">**</span><span class="n">numpy_args</span><span class="p">):</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load and format data to feed ASTROMER model. It can process either a list of bumpy arrays or tf.records. At the the end of this method, a tensorflow dataset is generated following the preprocessing pipeline explained in Section 5.3 (Donoso-Oliva, et al. 2022) </span>
+<span class="sd">   </span>
+<span class="sd">    :param input: The data set containing the light curves.</span>
+<span class="sd">    :type input: object</span>
+
+<span class="sd">    :param batch_size: This integer determines the number of subsets that we will pass to our model.</span>
+<span class="sd">    :type batch_size: Integer</span>
+
+<span class="sd">    :param shuffle: A boolean indicating whether to rearrange samples randomly</span>
+<span class="sd">    :type shuffle: Boolean</span>
+
+<span class="sd">    :param sampling: A Boolean that when is true, indicates the model to take samples of every light curve instead of all observation samples. </span>
+<span class="sd">    :type sampling: Boolean</span>
+
+<span class="sd">    :param max_obs: This Integer indicates how big each lightcurve sample will be. e.g. (with max_obs = 100): The length of a light curve is 720 observations so the model will generate 7 blocks of 100 observations, and the sample with 20 cases will be completed using padding with zero values after the last point in order to obtain a sequence of length 100.</span>
+<span class="sd">    :type max_obs: Integer</span>
+
+<span class="sd">    :param msk_frac: The fraction of samples that will be masked by the model</span>
+<span class="sd">    :type msk_frac: Float32</span>
+
+<span class="sd">    :param rnd_frac: The fraction of samples in which their values will be changed by random numbers.</span>
+<span class="sd">    :type rnd_frac: Float32</span>
+
+<span class="sd">    :param same_frac: It is the fraction of the masked observations that you unmask and allow to be processed in the attention layer</span>
+<span class="sd">    :type same_frac: Float32</span>
+
+<span class="sd">    :param repeat: This Integer determines the number of times the same data set is repeated.</span>
+<span class="sd">    :type repeat: Integer</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO] Loading Records&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pretraining_records</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span>
+                                   <span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span><span class="p">,</span> 
+                                   <span class="n">max_obs</span><span class="o">=</span> <span class="n">max_obs</span><span class="p">,</span> 
+                                   <span class="n">msk_frac</span><span class="o">=</span> <span class="n">msk_frac</span><span class="p">,</span>
+                                   <span class="n">rnd_frac</span><span class="o">=</span> <span class="n">rnd_frac</span><span class="p">,</span> 
+                                   <span class="n">same_frac</span><span class="o">=</span> <span class="n">same_frac</span><span class="p">,</span> 
+                                   <span class="n">sampling</span><span class="o">=</span> <span class="n">sampling</span><span class="p">,</span>
+                                   <span class="n">shuffle</span><span class="o">=</span> <span class="n">shuffle</span><span class="p">,</span> 
+                                   <span class="n">repeat</span><span class="o">=</span> <span class="n">repeat</span><span class="p">)</span>
+
+        
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO] Loading Numpy&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">load_numpy</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span>
+               <span class="n">ids</span><span class="o">=</span> <span class="n">numpy_args</span><span class="p">[</span><span class="s2">&quot;ids&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;ids&quot;</span> <span class="ow">in</span> <span class="n">numpy_args</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="n">labels</span><span class="o">=</span> <span class="n">numpy_args</span><span class="p">[</span><span class="s2">&quot;labels&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;labels&quot;</span> <span class="ow">in</span> <span class="n">numpy_args</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="n">batch_size</span><span class="o">=</span> <span class="n">batch_size</span><span class="p">,</span>
+               <span class="n">shuffle</span><span class="o">=</span> <span class="n">shuffle</span><span class="p">,</span>
+               <span class="n">sampling</span><span class="o">=</span> <span class="n">sampling</span><span class="p">,</span>
+               <span class="n">max_obs</span><span class="o">=</span> <span class="n">max_obs</span><span class="p">,</span>
+               <span class="n">msk_frac</span><span class="o">=</span> <span class="n">msk_frac</span><span class="p">,</span>
+               <span class="n">rnd_frac</span><span class="o">=</span> <span class="n">rnd_frac</span><span class="p">,</span>
+               <span class="n">same_frac</span><span class="o">=</span> <span class="n">same_frac</span><span class="p">,</span>
+               <span class="n">repeat</span><span class="o">=</span> <span class="n">repeat</span><span class="p">)</span></div>
+         
+         
+        
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Simon Salazar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

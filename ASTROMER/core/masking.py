@@ -27,7 +27,11 @@ def get_masked(tensor, frac=0.15):
         binary tensor: a time-distributed mask
     """
     with tf.name_scope("get_masked") as scope:
+
         steps = tf.shape(tensor)[0] # time steps
+        if frac == 0.:
+            print('[INFO] no masking')
+            return tf.ones([steps, 1])
         nmask = tf.multiply(tf.cast(steps, tf.float32), frac)
         nmask = tf.cast(nmask, tf.int32, name='nmask')
 

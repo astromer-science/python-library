@@ -296,19 +296,22 @@ def mask_sample(x, y , i, msk_prob, rnd_prob, same_prob, max_obs):
     # [MASK] values
     mask_out = get_masked(seq_magn, msk_prob)
 
-    # [MASK] -> Same values
-    seq_magn, mask_in = set_random(seq_magn,
-                                   mask_out,
-                                   seq_magn,
-                                   same_prob,
-                                   name='set_same')
+    if msk_prob > 0.:
+        # [MASK] -> Same values
+        seq_magn, mask_in = set_random(seq_magn,
+                                       mask_out,
+                                       seq_magn,
+                                       same_prob,
+                                       name='set_same')
 
-    # [MASK] -> Random value
-    seq_magn, mask_in = set_random(seq_magn,
-                                   mask_in,
-                                   tf.random.shuffle(seq_magn),
-                                   rnd_prob,
-                                   name='set_random')
+        # [MASK] -> Random value
+        seq_magn, mask_in = set_random(seq_magn,
+                                       mask_in,
+                                       tf.random.shuffle(seq_magn),
+                                       rnd_prob,
+                                       name='set_random')
+    else:
+        mask_in = tf.zeros_like(mask_out)
 
     time_steps = tf.shape(seq_magn)[0]
 
@@ -428,7 +431,8 @@ def load_numpy(samples,
                msk_frac=0.,
                rnd_frac=0.,
                same_frac=0.,
-               repeat=1):
+               repeat=1,
+               num_cls=-1):
     if sampling:
         fn_0 = adjust_fn(sample_lc, max_obs, False)
     else:
@@ -452,6 +456,10 @@ def load_numpy(samples,
     if not sampling:
         dataset = dataset.flat_map(lambda x,y,i: tf.data.Dataset.from_tensor_slices((x,y,i)))
     dataset = dataset.map(fn_1)
+
+    if labels is not None and num_cls!=-1:
+        dataset = dataset.map(lambda x: format_label(x, num_cls))
+
     dataset = dataset.padded_batch(batch_size).cache()
     dataset = dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
     return dataset

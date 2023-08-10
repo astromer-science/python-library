@@ -9,6 +9,7 @@ def make_pretraining(input,
                rnd_frac=0.,
                same_frac=0.,
                repeat=1,
+               n_classes=-1,
                **numpy_args):
     
     """
@@ -55,7 +56,8 @@ def make_pretraining(input,
                                    same_frac= same_frac, 
                                    sampling= sampling,
                                    shuffle= shuffle, 
-                                   repeat= repeat)
+                                   repeat= repeat,
+                                   n_classes=n_classes)
 
         
     if isinstance(input, list):
@@ -70,7 +72,8 @@ def make_pretraining(input,
                msk_frac= msk_frac,
                rnd_frac= rnd_frac,
                same_frac= same_frac,
-               repeat= repeat)
+               repeat= repeat,
+               num_cls=n_classes)
          
          
         

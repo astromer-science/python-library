@@ -5,8 +5,8 @@ def plot_cm(cm, ax, title='CM', fontsize=15, cbar=False, yticklabels=True, class
     '''
     Plot Confusion Matrix
     '''
-    labels = np.zeros_like(cm, dtype=np.object)
-    mask = np.ones_like(cm, dtype=np.bool)
+    labels = np.zeros_like(cm, dtype=object)
+    mask = np.ones_like(cm, dtype=bool)
     for (row, col), value in np.ndenumerate(cm):
         if value != 0.0:
             mask[row][col] = False
